@@ -38,9 +38,10 @@
         BurndownBar
       </a>
       <div class="links">
-        <a href="#sources">Connections</a>
         <a href="#inference">Inference</a>
         <a href="#rankings">Rankings</a>
+        <a href="#advisor">Model Advisor</a>
+        <a href="#sources">Connections</a>
       </div>
     </div>
   </nav>
@@ -80,21 +81,7 @@
       </ul>
     </section>
 
-    <section class="feature reveal" id="sources">
-      <div class="copy">
-        <p class="eyebrow">Connections</p>
-        <h2>CLIProxyAPI or direct.<br>Your choice.</h2>
-        <p>Read Codex, Grok, and Claude through the accounts already signed in to CLIProxyAPI, or connect each one directly. Switch them together or one at a time under Quota source.</p>
-        <p>Every other provider connects on its own. Credentials you save stay in the macOS Keychain.</p>
-      </div>
-      <figure class="shot">
-        <div class="window crop crop-sources">
-          <img src="images/screenshots/preferences.png?v=2026-11-19" alt="Preferences — Quota source set per provider" width="796" height="2312">
-        </div>
-      </figure>
-    </section>
-
-    <section class="feature reverse reveal" id="inference">
+    <section class="feature reveal" id="inference">
       <div class="copy">
         <p class="eyebrow">Inference</p>
         <h2>Spend you can see.<br>Limits you can set.</h2>
@@ -108,7 +95,7 @@
       </figure>
     </section>
 
-    <section class="feature reveal" id="rankings">
+    <section class="feature reverse reveal" id="rankings">
       <div class="copy">
         <p class="eyebrow">Rankings</p>
         <h2>Which models<br>developers actually use.</h2>
@@ -121,11 +108,42 @@
         </div>
       </figure>
     </section>
+
+    <section class="feature reveal" id="advisor">
+      <div class="copy">
+        <p class="eyebrow">Model Advisor</p>
+        <h2>A recommendation<br>for the task.</h2>
+        <p>Pick a decision model (Jev, OpenAI Decisions API etc. ) and a task, then get advice.</p>
+        <p>The recommendation weighs pricing, cheapness, intelligence, and your token usage. It uses your OpenRouter Standard API key, and the result is advisory.</p>
+      </div>
+      <figure class="shot shot-stack">
+        <div class="window">
+          <img src="images/screenshots/model-advisor-settings.png?v=2026-11-19" alt="Model Advisor settings — Jev 1.14 and factor weights" width="750" height="822">
+        </div>
+        <div class="window">
+          <img src="images/screenshots/model-advisor-result.png?v=2026-11-19" alt="Model Advisor recommendation for a coding task" width="750" height="966">
+        </div>
+      </figure>
+    </section>
+
+    <section class="feature reverse reveal" id="sources">
+      <div class="copy">
+        <p class="eyebrow">Connections</p>
+        <h2>CLIProxyAPI or direct.<br>Your choice.</h2>
+        <p>Read Codex, Grok, and Claude through the accounts already signed in to CLIProxyAPI, or connect each one directly. Switch them together or one at a time under Quota source.</p>
+        <p>Every other provider connects on its own. Credentials you save stay in the macOS Keychain.</p>
+      </div>
+      <figure class="shot">
+        <div class="window crop crop-sources">
+          <img src="images/screenshots/preferences.png?v=2026-11-19" alt="Preferences — Quota source set per provider" width="796" height="2312">
+        </div>
+      </figure>
+    </section>
   </main>
 
   <footer class="reveal">
     <p><a href="https://github.com/patel-of-thought/burndown-bar/blob/main/docs/PRIVACY.md">Privacy and credentials</a></p>
-    <p>Provider marks are sourced from their <a href="https://github.com/patel-of-thought/burndown-bar/blob/main/Assets/Providers/sources.json">official sites or projects</a>. The OpenRouter icon and BurndownBar app icon are original artwork. Provider trademarks belong to their owners; no endorsement is implied.</p>
+    <p>Provider marks are sourced from their <a href="https://github.com/patel-of-thought/burndown-bar/blob/main/Assets/Providers/sources.json">official sites or projects</a>. The BurndownBar app icon is original artwork. Provider trademarks belong to their owners; no endorsement is implied.</p>
     <p>Rankings data from <a href="https://openrouter.ai/rankings">OpenRouter</a> under CC BY 4.0 and from Artificial Analysis.</p>
   </footer>
 </body>
