@@ -1,6 +1,6 @@
 # Third-party notices
 
-Provider logo SVGs are sourced from [CodexBar's public Resources directory](https://github.com/steipete/CodexBar/tree/main/Sources/CodexBar/Resources), under the same MIT license. Source URLs and Git blob identifiers are recorded in `Assets/Providers/sources.json`, also included in the application bundle. PNG assets are transparent rasterizations of those SVGs. Provider trademarks remain the property of their respective owners.
+The 11 CodexBar provider logo SVGs listed in `Assets/Providers/sources.json` are sourced from [CodexBar's public Resources directory](https://github.com/steipete/CodexBar/tree/main/Sources/CodexBar/Resources), under its MIT license. Source URLs and Git blob identifiers are recorded in that file, which is also included in the application bundle. Their PNG assets are transparent rasterizations of the SVGs. The OpenRouter icon is original BurndownBar artwork and is recorded separately in the same file. Provider trademarks remain the property of their respective owners.
 
 MIT License
 

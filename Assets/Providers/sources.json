@@ -64,5 +64,11 @@
     "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-gemini.svg",
     "git_blob": "869ae75bc33159b2f6a1665cb74acaa80200b751",
     "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "openrouter",
+    "source": "Original BurndownBar artwork by Ayman Patel",
+    "git_blob": "8acc0ea8400c04ef3edf9e0d5839a16db6a975c5",
+    "license": "BurndownBar MIT; OpenRouter mark belongs to its owner"
   }
 ]
