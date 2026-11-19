@@ -10,6 +10,11 @@
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <div class="bg" aria-hidden="true">
+    <div class="neb neb-a"></div>
+    <div class="neb neb-b"></div>
+    <img class="field" src="images/constellation.svg" alt="">
+  </div>
   <nav class="bar">
     <div class="bar-inner">
       <a class="brand" href="#top">
@@ -27,17 +32,22 @@
   <main id="top">
     <header class="hero">
       <img class="hero-icon" src="images/app-icon.png" alt="" width="112" height="112">
-      <h1>Your AI quotas,<br>in the menu bar.</h1>
-      <p class="lede">A native macOS menu-bar app for subscription quota, token usage, cache reads, and inference spend.</p>
-      <p class="meta">macOS 14 or later · SwiftUI and AppKit · No external packages</p>
+      <h1>BurndownBar</h1>
+      <p class="catchline">May you not Burndown your AI tokens</p>
+      <p class="lede">Your AI quotas, in the menu bar. Track subscriptions, token usage, cache reads, and inference spend in one native macOS app.</p>
+      <div class="badges" aria-label="App details">
+        <span class="badge"><span class="badge-label">beta</span><span class="badge-value badge-release">0.0.1</span></span>
+        <span class="badge"><span class="badge-label">macOS</span><span class="badge-value badge-macos">14+</span></span>
+        <span class="badge"><span class="badge-label">license</span><span class="badge-value badge-license">MIT</span></span>
+      </div>
       <figure class="shot hero-shot">
         <div class="window crop crop-overview">
-          <img src="images/screenshots/cursor.png?v=1.0.0" alt="Subscriptions — Cursor quota bars and reset countdowns" width="796" height="2856">
+          <img src="images/screenshots/cursor.png?v=2026-11-19" alt="Subscriptions — Cursor quota bars and reset countdowns" width="796" height="2832">
         </div>
       </figure>
     </header>
 
-    <section class="providers" aria-label="Supported providers">
+    <section class="providers reveal" aria-label="Supported providers">
       <p class="eyebrow">Works with</p>
       <ul>
         <li><span class="logo" style="--icon: url(images/providers/openrouter.png)"></span>OpenRouter</li>
@@ -54,7 +64,7 @@
       </ul>
     </section>
 
-    <section class="feature" id="sources">
+    <section class="feature reveal" id="sources">
       <div class="copy">
         <p class="eyebrow">Connections</p>
         <h2>CLIProxyAPI or direct.<br>Your choice.</h2>
@@ -63,12 +73,12 @@
       </div>
       <figure class="shot">
         <div class="window crop crop-sources">
-          <img src="images/screenshots/preferences.png?v=1.0.0" alt="Preferences — Quota source set per provider" width="796" height="2312">
+          <img src="images/screenshots/preferences.png?v=2026-11-19" alt="Preferences — Quota source set per provider" width="796" height="2312">
         </div>
       </figure>
     </section>
 
-    <section class="feature reverse" id="inference">
+    <section class="feature reverse reveal" id="inference">
       <div class="copy">
         <p class="eyebrow">Inference</p>
         <h2>Spend you can see.<br>Limits you can set.</h2>
@@ -77,28 +87,29 @@
       </div>
       <figure class="shot">
         <div class="window crop crop-inference">
-          <img src="images/screenshots/openrouter.png?v=1.0.0" alt="OpenRouter — Credits and key quotas" width="796" height="3502">
+          <img src="images/screenshots/openrouter.png?v=2026-11-19" alt="OpenRouter — Credits and key quotas" width="796" height="3478">
         </div>
       </figure>
     </section>
 
-    <section class="feature" id="rankings">
+    <section class="feature reveal" id="rankings">
       <div class="copy">
         <p class="eyebrow">Rankings</p>
         <h2>Which models<br>developers actually use.</h2>
-        <p>OpenRouter rankings show top models, apps, and task share by tokens processed, today, this week, or this month.</p>
+        <p>OpenRouter rankings show top models and apps by tokens processed, today, this week, or this month.</p>
         <p>Artificial Analysis compares the top 12 models by Intelligence Index, time per task, and cost per task.</p>
       </div>
       <figure class="shot">
         <div class="window">
-          <img src="images/screenshots/rankings.png?v=1.0.0" alt="Rankings — OpenRouter and Artificial Analysis sources" width="796" height="1002">
+          <img src="images/screenshots/rankings.png?v=2026-11-19" alt="Rankings — OpenRouter and Artificial Analysis sources" width="796" height="978">
         </div>
       </figure>
     </section>
   </main>
 
-  <footer>
-    <p>Provider logos come from <a href="https://github.com/steipete/CodexBar/tree/main/Sources/CodexBar/Resources">CodexBar</a> under the MIT license. Trademarks stay with their owners.</p>
+  <footer class="reveal">
+    <p><a href="https://github.com/patel-of-thought/burndown-bar/blob/main/docs/PRIVACY.md">Privacy and credentials</a></p>
+    <p>Some provider icons are sourced from <a href="https://github.com/steipete/CodexBar/tree/main/Sources/CodexBar/Resources">CodexBar</a> under its MIT license. The OpenRouter icon and BurndownBar app icon are original artwork. Provider trademarks belong to their owners.</p>
     <p>Rankings data from <a href="https://openrouter.ai/rankings">OpenRouter</a> under CC BY 4.0 and from Artificial Analysis.</p>
   </footer>
 </body>

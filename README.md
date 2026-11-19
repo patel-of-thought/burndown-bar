@@ -1,8 +1,17 @@
-# BurndownBar
+<div align="center">
+  <img src="Assets/AppIcon.png" alt="BurndownBar app icon" width="112" height="112" />
+  <h1>BurndownBar</h1>
+  <p>May you not Burndown your AI tokens</p>
+  <p>
+    <img src="https://img.shields.io/badge/beta-0.0.1-111111" alt="Beta version 0.0.1" />
+    <img src="https://img.shields.io/badge/macOS-14%2B-4b93cf" alt="macOS 14 or newer" />
+    <img src="https://img.shields.io/badge/license-MIT-6b5be8" alt="MIT license" />
+  </p>
+</div>
 
 A lightweight, native macOS menu-bar app for tracking AI coding subscriptions, token usage, prompt cache reads, and inference spend in one place — built in pure SwiftUI/AppKit with zero external dependencies.
 
-Release preparation is tracked in [TODO.md](TODO.md). The current build is for local development and is ad hoc signed.
+> Note: The current build is for local development and is ad hoc signed.
 
 ---
 
@@ -11,16 +20,16 @@ Release preparation is tracked in [TODO.md](TODO.md). The current build is for l
 <table>
   <tr>
     <td align="center" width="33%">
-      <img src="docs/screenshots/overview.png" alt="Overview — Inference" width="260" /><br />
-      <sub><b>Overview</b> · Credits &amp; key quotas</sub>
+      <img src="docs/screenshots/overview.png" alt="Subscriptions overview" width="260" /><br />
+      <sub><b>Subscriptions</b> · Account status &amp; quota windows</sub>
     </td>
     <td align="center" width="33%">
       <img src="docs/screenshots/openrouter.png" alt="OpenRouter Insights & Controls" width="260" /><br />
-      <sub><b>OpenRouter</b> · Credits, cache hit &amp; key caps</sub>
+      <sub><b>OpenRouter</b> · Credits, usage &amp; key controls</sub>
     </td>
     <td align="center" width="33%">
       <img src="docs/screenshots/rankings.png" alt="OpenRouter Global Rankings" width="260" /><br />
-      <sub><b>Rankings</b> · Top models, apps &amp; task share</sub>
+      <sub><b>Rankings</b> · OpenRouter models &amp; apps</sub>
     </td>
   </tr>
   <tr>
@@ -30,11 +39,17 @@ Release preparation is tracked in [TODO.md](TODO.md). The current build is for l
     </td>
     <td align="center" width="33%">
       <img src="docs/screenshots/openrouter-connection.png" alt="Dual-Key OpenRouter Connection" width="260" /><br />
-      <sub><b>Dual-Key Setup</b> · Management + Standard API keys</sub>
+      <sub><b>OpenRouter Connection</b> · Management &amp; Standard API keys</sub>
     </td>
     <td align="center" width="33%">
       <img src="docs/screenshots/preferences.png" alt="Preferences &amp; Provider Controls" width="260" /><br />
       <sub><b>Preferences</b> · Providers, privacy &amp; quota sources</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/screenshots/cursor.png" alt="Cursor usage details" width="260" /><br />
+      <sub><b>Cursor</b> · Quotas, status &amp; usage history</sub>
     </td>
   </tr>
 </table>
@@ -43,13 +58,14 @@ Release preparation is tracked in [TODO.md](TODO.md). The current build is for l
 
 ## Features
 
-- **Unified Menu-Bar Monitor**: Shows the lowest remaining quota percentage across fresh, enabled accounts right in the macOS menu bar, with three top-level dashboard sections: **Subscriptions**, **Inference**, and **Rankings**.
+- **Unified Menu-Bar Monitor**: Shows the lowest remaining quota percentage across fresh, enabled accounts right in the macOS menu bar, with four top-level dashboard sections: **Subscriptions**, **Inference**, **Rankings**, and **Model Advisor**.
 - **Token, Cache & Cost Charts (`UsageChart`)**: 7-day and 30-day stacked bar and pie charts splitting **Input**, **Output**, **Cache read**, and **Cache write** tokens alongside USD spend, with hover inspection and multi-source switching.
 - **Pace Markers & Countdown Timers**: Linear pace indicators compare remaining allowance against time left in the billing or rolling window (`5-hour`, `Daily`, `Weekly`, `Monthly`).
 - **OpenRouter Dual-Key Intelligence**:
   - **Management Key**: Account credit balance & runway estimate, 30-day daily token & cache analytics (`cache_hit_rate` vs. cacheable %, `reasoning_tokens` share, blended cost/1M), per-key attribution, endpoint uptime/pricing, and inline **Pause/Resume**, **USD Cap**, and **Zero Data Retention (ZDR)** guardrail controls.
-  - **Standard API Key**: Key limit tracking plus global **OpenRouter Rankings** (`Top Models`, `Top Apps`, and `Tasks` market share via OpenRouter's Data API).
-- **Artificial Analysis Charts**: The Rankings section compares the top 12 intelligence models across Intelligence Index, Time per Task, and Cost per Task. Add a free Artificial Analysis API key in Rankings for the index and cost data; Time per Task comes from the public leaderboard when available, or from the Pro API. Values are attributed to Artificial Analysis and refreshed at most every six hours.
+  - **Standard API Key**: Key limit tracking plus global **OpenRouter Rankings** (`Top Models` and `Top Apps` via OpenRouter's Data API).
+- **Artificial Analysis Charts**: In Rankings → Artificial Analysis, switch between **Intelligence**, **Time per Task**, and **Cost per Task** tabs; one graph is displayed at a time for the same top 12 intelligence models. Add a free Artificial Analysis API key in Rankings for the index and cost data; Time per Task comes from the public leaderboard when available, or from the Pro API. Values are attributed to Artificial Analysis and refreshed at most every six hours.
+- **Model Advisor**: Open the root **Model Advisor** tab beside Rankings and choose a native OpenRouter decision model: Jev 1.14 (default), Gemini Decision 1, OpenAI GPT-6 Luna Decisions, Perplexity Decider v1.3 (Free), or Cloudflare Clef Flash. Custom accepts another Decisions API model ID. Select a task with **Category → Task**, or choose Custom for a free-text task, then **Get Advice**. All models use the same OpenRouter Standard API key and `/api/alpha/decisions`; recommendations, confidence, and spend-efficiency ratings are advisory, not measured accuracy or realized savings. Requests follow the selected model's pricing and rate limits. Cloudflare Workers AI currently reads only roughly the first 2K tokens of text state; see the [Clef Flash model page](https://openrouter.ai/cloudflare/clef-flash).
 - **Keychain &amp; Environment Variables**: Credentials saved in the app live in macOS Keychain (`local.burndownbar`), with process environment variable fallbacks where supported.
 - **Privacy Mode**: One toggle masks account emails across cards and detail views.
 - **Zero External Packages**: Compiles directly with Apple's Swift toolchain (`swiftc`) against `AppKit`, `SwiftUI`, `Charts`, `Security`, `LocalAuthentication`, and `sqlite3`.
@@ -120,12 +136,14 @@ To start BurndownBar as a new user, run `bash commands/clean-install.command` af
 
 ## Configuration & Connection Notes
 
+Read [Privacy and Credentials](docs/PRIVACY.md) before connecting accounts. It explains local credential access, provider requests, and the data Model Advisor sends to OpenRouter.
+
 ### Dual-Key Setup for OpenRouter
 
 In **OpenRouter → Connection**, you can paste either or both keys:
 
 1. **Management API Key** (`openrouter.ai/settings/management-keys`): Unlocks account credits, 30-day daily token & cache analytics, per-key spend attribution, endpoint health, and inline key/guardrail controls.
-2. **Standard API Key** *(optional)*: Unlocks OpenRouter's Data API (`rankings-daily`, `app-rankings`, `classifications/task`) for the **Rankings** tab (`Top Models`, `Top Apps`, `By Task`). If used alone without a Management Key, it tracks per-key USD limits and global rankings.
+2. **Standard API Key** *(optional)*: Unlocks OpenRouter's Data API (`rankings-daily` and `app-rankings`) for the **Rankings** tab (`Top Models` and `Top Apps`). If used alone without a Management Key, it tracks per-key USD limits and global rankings.
 
 ### Environment Variables
 
@@ -151,89 +169,13 @@ Credentials saved in the UI are stored in macOS Keychain (`local.burndownbar`), 
 
 ## Project Architecture
 
-`build.sh` recursively compiles every `.swift` file in `Sources/` and `Tests/`:
-
-```text
-Sources/
-  App.swift                   # NSApplicationDelegate, status bar item, NSPopover, CLI test flags
-  Dashboard.swift             # Main 398pt popover views, tabs, settings, connection flows
-  Store.swift                 # DashboardStore (@MainActor state, refresh loop, persistence)
-  Models.swift                # Account, JSON/date/number parsing helpers
-  PreviewRenderer.swift       # Offscreen AppKit/SwiftUI preview generator (--render-previews)
-  Charting/
-    UsageChart.swift          # Swift Charts stacked bar & pie views (7d / 30d, Cost / Tokens)
-  Providers/
-    Shared/                   # SubscriptionClient (allowlisted HTTPS), Keychain, ProxyClient
-    <Provider>/               # Provider-specific API clients, models, controls & views
-    ProviderLogo.swift        # Template PNG icon loader
-    ProviderTheme.swift       # Light/dark brand colors
-  Usage/
-    UsageModels.swift         # QuotaWindow, DailyUsage, UsageCosts, UsageSeries, UsageFact
-    UsageParsing.swift        # Shared parser helpers
-    Providers/<Provider>/     # Pure, deterministic JSON -> model parsers
-    Shared/                   # ProxyUsageReader (CLIProxyAPI SQLite WAL reader)
-  Diagnostics/
-    LiveCheck.swift           # Explicit live diagnostics (--live-check)
-Tests/
-  SelfTests.swift             # Parser, quota, cost, pagination & logo tests (--self-test)
-  TransportTests.swift        # Isolated URLProtocol HTTP fixture tests (--transport-tests)
-  Providers/                  # Provider parser, cookie & logo tests
-  Usage/                      # Proxy SQLite usage-history tests
-```
+See [Project Architecture](docs/ARCHITECTURE.md) for the source and test layout.
 
 ---
 
 ## Contributing
 
-Contributions are welcome — especially new providers, parser edge-case fixes, accessibility improvements, and chart enhancements.
-
-### Development Workflow
-
-1. **Fork & clone** the repository, then run the full build + test suite:
-   ```sh
-   bash build.sh
-   ```
-2. In restricted/CI environments without a macOS WindowServer session, skip graphical icon-sizing checks with:
-   ```sh
-   BURNDOWNBAR_HEADLESS=1 bash build.sh
-   ```
-3. To regenerate and visually inspect UI previews (dark mode):
-   ```sh
-   build/BurndownBar.app/Contents/MacOS/BurndownBar --render-previews
-   ```
-   Previews are written to `build/previews/`.
-
-### Adding a New Provider
-
-1. **Register the origin**: Add a case to `AccountOrigin` in `Sources/Providers/Shared/ProviderModels.swift` (and `additional`), plus its display name in `Account.providerName(for:)` in `Sources/Models.swift`.
-2. **Add brand assets**:
-   - Place a `128x128` 8-bit RGBA template `.png` (and `.svg` source) in `Assets/Providers/`.
-   - Register it in `Sources/Providers/ProviderLogo.swift` and `Sources/Providers/ProviderTheme.swift`.
-   - Record attribution in `Assets/Providers/sources.json` if third-party.
-3. **Allowlist & credentials**:
-   - Add the API host to the `allowed` list in `Sources/Providers/Shared/SubscriptionClient.swift` (HTTPS only; `NoRedirectDelegate` blocks credential-leaking redirects).
-   - Add any environment variable names to `SubscriptionCredentials.keyVariables` in `Sources/Providers/Shared/ProviderCredentials.swift`.
-4. **Implement pure parser + client**:
-   - Keep JSON parsing pure and deterministic in `Sources/Usage/Providers/<Provider>/` (`AdditionalParsers` or `SubscriptionParser`). Never invent full quotas or `$0` spend when fields are missing — return `nil` or throw a clear `SubscriptionError`.
-   - Implement network calls in `Sources/Providers/<Provider>/` and wire routing in `Sources/Providers/Shared/ProviderRouting.swift`.
-5. **Wire UI & connection instructions**:
-   - Update `connect(_:)` in `Sources/Store.swift` and `connectionInstructions` / `signInButtonTitle` in `Sources/Dashboard.swift`.
-6. **Add tests**:
-   - Add parser unit tests (valid payloads, edge cases, malformed rejection) in `Tests/Providers/AdditionalProviderTests.swift`.
-   - Add end-to-end mocked HTTP tests using `FixtureURLProtocol` in `Tests/TransportTests.swift`.
-
-### Engineering & Testing Guidelines
-
-- **No live network or real credentials in tests**: All automated checks in `--self-test` and `--transport-tests` must remain offline and deterministic using synthetic fixtures. Never write test secrets into the user's real macOS Keychain.
-- **Validate dynamic path IDs**: Any user- or API-supplied ID interpolated into URL paths must pass `SubscriptionClient.safeID` / `safeSlug` to prevent path traversal.
-- **Keep comments & docstrings clean**: Preserve existing comments; document non-obvious invariants (e.g., UTC vs. local day boundaries, inclusive vs. exclusive cached token counts).
-
-### Pull Request Checklist
-
-- [ ] `bash build.sh` passes cleanly (all self-tests, icon tests, and transport tests)
-- [ ] New provider hosts are allowlisted in `SubscriptionClient` and path segments are validated
-- [ ] New UI changes are verified with `--render-previews`
-- [ ] No real tokens, cookies, emails, or local paths are included in fixtures or screenshots
+See the [contribution guide](docs/CONTRIBUTING.md) for the development workflow, provider guidance, and pull request checklist.
 
 ---
 
