@@ -11,8 +11,8 @@ Release preparation is tracked in [TODO.md](TODO.md). The current build is for l
 <table>
   <tr>
     <td align="center" width="33%">
-      <img src="docs/screenshots/overview.png" alt="Overview — Subscriptions" width="260" /><br />
-      <sub><b>Overview</b> · Quota bars &amp; reset countdowns</sub>
+      <img src="docs/screenshots/overview.png" alt="Overview — Inference" width="260" /><br />
+      <sub><b>Overview</b> · Credits &amp; key quotas</sub>
     </td>
     <td align="center" width="33%">
       <img src="docs/screenshots/openrouter.png" alt="OpenRouter Insights & Controls" width="260" /><br />
