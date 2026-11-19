@@ -182,5 +182,5 @@ See the [contribution guide](docs/CONTRIBUTING.md) for the development workflow,
 ## Third-Party Notices & Data Attribution
 
 - BurndownBar's own code and original assets are licensed under [MIT](LICENSE).
-- Provider icon assets and license attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) (bundled inside `BurndownBar.app`).
+- Provider icon sources and trademark attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [sources.json](Assets/Providers/sources.json). The notice is bundled inside `BurndownBar.app`.
 - OpenRouter global rankings data displayed via the Data API is attributed to **OpenRouter (`openrouter.ai/rankings`)** under **CC BY 4.0**.

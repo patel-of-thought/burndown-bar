@@ -216,6 +216,10 @@ enum SelfTests {
         check(routing.section == .rankings && routing.sectionAccounts.isEmpty,
               "global rankings section has no account tabs")
         routing.select(rankedInference)
+        routing.selectSection(.modelAdvisor)
+        check(routing.providers.isEmpty && routing.selectedID.isEmpty && routing.tab == "Overview",
+              "Model Advisor clears provider selection and has no account tabs")
+        routing.select(rankedInference)
         check(routing.section == .inference && routing.tab == "OpenRouter" && routing.selected?.id == rankedInference.id,
               "account selection opens its provider section")
         var connectedProxy = Account.parse(["auth_index": "status-fixture", "type": "codex"])!
@@ -229,6 +233,7 @@ enum SelfTests {
         passed += BrowserCursorSessionTests.run()
         passed += ProxyUsageTests.run()
         passed += ArtificialAnalysisTests.run()
+        passed += JevClassifierTests.run()
         if CommandLine.arguments.contains("--headless") {
             print("Skipped native provider icon sizing checks: graphical macOS session required.")
         } else { passed += ProviderLogoTests.run() }

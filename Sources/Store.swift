@@ -2,13 +2,15 @@ import AppKit
 import SwiftUI
 
 enum DashboardSection: String, CaseIterable, Identifiable {
-    case subscriptions, inference, rankings
+    case subscriptions, inference, rankings, modelAdvisor
     var id: String { rawValue }
+    var showsAccounts: Bool { self == .subscriptions || self == .inference }
     var title: String {
         switch self {
         case .subscriptions: return "Subscriptions"
         case .inference: return "Inference"
         case .rankings: return "Rankings"
+        case .modelAdvisor: return "Model Advisor"
         }
     }
 }
@@ -28,6 +30,17 @@ enum DashboardSection: String, CaseIterable, Identifiable {
     @Published var artificialAnalysisError: String?
     @Published var artificialAnalysisLoading = false
     @Published var artificialAnalysisKeyInput = ""
+    @Published var jevClassification: JevClassificationResult?
+    @Published var jevError: String?
+    @Published var jevLoading = false
+    @Published var jevTaskInput = ""
+    @Published var jevConfig: JevClassifierConfig {
+        didSet {
+            if persistPreferences, let data = try? JSONEncoder().encode(jevConfig) {
+                UserDefaults.standard.set(data, forKey: "jevClassifierConfig")
+            }
+        }
+    }
     @Published var selectedID = ""
     @Published var settingsVisible = false
     @Published var connectionVisible = false
@@ -60,6 +73,7 @@ enum DashboardSection: String, CaseIterable, Identifiable {
     private var refreshQueued = false
     private let subscriptions = SubscriptionClient()
     private let artificialAnalysisClient = ArtificialAnalysisClient()
+    private let jevClient = JevClassifierClient()
     private let persistPreferences: Bool
 
     init(persistPreferences: Bool = true) {
@@ -77,6 +91,12 @@ enum DashboardSection: String, CaseIterable, Identifiable {
         interval = [60, 120, 300, 600].contains(saved) ? saved : 120
         cursorEnabled = UserDefaults.standard.object(forKey: "cursorEnabled") as? Bool ?? true
         droidEnabled = UserDefaults.standard.object(forKey: "droidEnabled") as? Bool ?? true
+        if let savedJev = UserDefaults.standard.data(forKey: "jevClassifierConfig"),
+           let decoded = try? JSONDecoder().decode(JevClassifierConfig.self, from: savedJev) {
+            jevConfig = decoded
+        } else {
+            jevConfig = JevClassifierConfig()
+        }
         if cursorEnabled { accounts.append(SubscriptionClient.placeholder(.cursor)) }
         if droidEnabled { accounts.append(SubscriptionClient.placeholder(.factory)) }
         for origin in AccountOrigin.additional where usesDirect(origin) { accounts.append(SubscriptionClient.placeholder(origin)) }
@@ -86,7 +106,7 @@ enum DashboardSection: String, CaseIterable, Identifiable {
             switch section {
             case .subscriptions: return !(account.proxyOrigin ?? account.origin).isInferenceProvider
             case .inference: return (account.proxyOrigin ?? account.origin).isInferenceProvider
-            case .rankings: return false
+            case .rankings, .modelAdvisor: return false
             }
         }
     }
@@ -99,7 +119,9 @@ enum DashboardSection: String, CaseIterable, Identifiable {
         tab = "Overview"
         selectedID = ""
         if persistPreferences { UserDefaults.standard.set(next.rawValue, forKey: "dashboardSection") }
-        if next == .rankings { Task { await refreshArtificialAnalysis() } }
+        if persistPreferences && (next == .rankings || next == .modelAdvisor) {
+            Task { await refreshArtificialAnalysis() }
+        }
     }
     var hasArtificialAnalysisKey: Bool {
         SubscriptionCredentials.namedKey(account: "artificial-analysis-key", variable: "ARTIFICIAL_ANALYSIS_API_KEY") != nil
@@ -123,6 +145,44 @@ enum DashboardSection: String, CaseIterable, Identifiable {
             artificialAnalysis = try await artificialAnalysisClient.rankings(key: key)
             artificialAnalysisError = nil
         } catch { artificialAnalysisError = error.localizedDescription }
+    }
+    private var jevAPIKey: String? {
+        if let standard = SubscriptionCredentials.namedKey(account: "openrouter-standard-key", variable: "OPENROUTER_API_KEY") {
+            return standard
+        }
+        if accounts.first(where: { $0.origin == .openrouter })?.openRouter?.isManagementKey == false,
+           let primary = SubscriptionCredentials.namedKey(account: "openrouter-key", variable: "OPENROUTER_MANAGEMENT_KEY") {
+            return primary
+        }
+        return nil
+    }
+    var hasJevAPIKey: Bool { jevAPIKey != nil }
+    func runJevClassifier(force: Bool = false) async {
+        guard !jevLoading else { return }
+        guard let key = jevAPIKey else {
+            jevError = JevClassifierError.missingKey.errorDescription
+            return
+        }
+        if !force, let existing = jevClassification, Date().timeIntervalSince(existing.classifiedAt) < 15 * 60 {
+            return
+        }
+        jevLoading = true
+        defer { jevLoading = false }
+        let prices = await OpenRouterPricingCache.shared.prices(using: subscriptions)
+        let context = JevContextBuilder.build(
+            accounts: accounts,
+            localUsage: localUsage,
+            artificialAnalysis: artificialAnalysis,
+            prices: prices,
+            task: jevTaskInput,
+            config: jevConfig
+        )
+        do {
+            jevClassification = try await jevClient.classify(context: context, apiKey: key)
+            jevError = nil
+        } catch {
+            jevError = error.localizedDescription
+        }
     }
     var healthyCount: Int { accounts.filter { !isStale($0) && $0.updatedAt != nil && !$0.disabled }.count }
     var statusPercent: String? {

@@ -6,7 +6,7 @@ struct OpenRouterInsightsView: View {
         var id: String { rawValue }
     }
     enum RankingsSlice: String, CaseIterable, Identifiable {
-        case models = "Top Models", apps = "Top Apps", tasks = "By Task"
+        case models = "Top Models", apps = "Top Apps"
         var id: String { rawValue }
     }
 
@@ -23,6 +23,7 @@ struct OpenRouterInsightsView: View {
     @State private var confirmingZDR = false
     @State private var busy = false
     @State private var actionError: String?
+    @State private var guardrailError: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -285,22 +286,6 @@ struct OpenRouterInsightsView: View {
                             }
                         }
                     }
-                case .tasks:
-                    if rankings.taskShares.isEmpty {
-                        Text("No task classification data available.").font(.caption).foregroundStyle(.secondary)
-                    } else {
-                        VStack(spacing: 0) {
-                            let visible = Array(rankings.taskShares.prefix(6))
-                            ForEach(Array(visible.enumerated()), id: \.element.id) { idx, item in
-                                HStack {
-                                    Text(item.name).font(.callout).lineLimit(1)
-                                    Spacer()
-                                    Text(String(format: "%.1f%% tok", item.tokenSharePercent)).font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                                }.padding(.vertical, 6)
-                                if idx < visible.count - 1 { Divider() }
-                            }
-                        }
-                    }
                 }
 
                 let citation = rankings.asOf.map { "Source: OpenRouter (openrouter.ai/rankings), as of \($0)" } ?? "Source: OpenRouter (openrouter.ai/rankings)"
@@ -308,7 +293,7 @@ struct OpenRouterInsightsView: View {
             }
         } else if !snapshot.hasStandardKey {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Add a Standard API Key in Connections to fetch OpenRouter's global Top Models, Top Apps, and task market share.")
+                Text("Add a Standard API Key in Connections to fetch OpenRouter's global Top Models and Top Apps.")
                     .font(.caption).foregroundStyle(.secondary)
                 Button("Add Standard API Key") { store.openConnectionSettings(.openrouter) }
                     .controlSize(.small)
@@ -326,6 +311,9 @@ struct OpenRouterInsightsView: View {
                 Text("Guardrails").font(.headline)
                 Spacer()
                 if busy { ProgressView().controlSize(.small) }
+            }
+            if let guardrailError {
+                Text(guardrailError).font(.caption).foregroundStyle(.orange)
             }
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
@@ -346,7 +334,7 @@ struct OpenRouterInsightsView: View {
                     Spacer()
                     Button(zdrEnabled ? "Confirm Disable" : "Confirm Enable") {
                         let hashes = snapshot.keys.filter { !$0.disabled }.map(\.hash)
-                        perform {
+                        perform(guardrail: true) {
                             try await store.setOpenRouterZDR(enabled: !zdrEnabled, guardrailID: activeGuardrail?.id, keyHashes: hashes)
                         }
                         confirmingZDR = false
@@ -360,13 +348,16 @@ struct OpenRouterInsightsView: View {
         .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(Color.primary.opacity(0.08)))
     }
 
-    private func perform(_ operation: @escaping () async throws -> Void) {
-        actionError = nil
+    private func perform(guardrail: Bool = false, _ operation: @escaping () async throws -> Void) {
+        if guardrail { guardrailError = nil } else { actionError = nil }
         busy = true
         Task {
             defer { busy = false }
             do { try await operation() }
-            catch { actionError = SubscriptionClient.message(error, provider: "OpenRouter") }
+            catch {
+                let message = SubscriptionClient.message(error, provider: "OpenRouter")
+                if guardrail { guardrailError = message } else { actionError = message }
+            }
         }
     }
 }

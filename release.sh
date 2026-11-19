@@ -36,8 +36,8 @@ fi
 
 version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Info.plist)
 build_number=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' Info.plist)
-if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ || ! "$build_number" =~ ^[0-9]+$ ]]; then
-  echo "Info.plist needs a semantic release version and numeric build number." >&2
+if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ || ! "$build_number" =~ ^[0-9]+$ ]]; then
+  echo "Info.plist needs a semantic version (optionally prerelease) and numeric build number." >&2
   exit 1
 fi
 artifact="dist/BurndownBar-${version}+${build_number}.zip"

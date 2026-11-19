@@ -107,25 +107,17 @@ struct OpenRouterGlobalAppRank: Identifiable {
     var id: String { "\(rank)-\(name)" }
 }
 
-struct OpenRouterTaskShare: Identifiable {
-    let name: String
-    let tokenSharePercent: Double
-    let usageSharePercent: Double
-    var id: String { name }
-}
-
 struct OpenRouterRankingsSnapshot {
     var asOf: String?
     var topModels: [OpenRouterGlobalModelRank] = []
     var modelPeriods: [OpenRouterRankingPeriod: [OpenRouterGlobalModelRank]] = [:]
     var topApps: [OpenRouterGlobalAppRank] = []
-    var taskShares: [OpenRouterTaskShare] = []
 
     func models(for period: OpenRouterRankingPeriod) -> [OpenRouterGlobalModelRank] {
         modelPeriods[period] ?? (period == .week ? topModels : [])
     }
 
-    var isEmpty: Bool { topModels.isEmpty && topApps.isEmpty && taskShares.isEmpty }
+    var isEmpty: Bool { topModels.isEmpty && topApps.isEmpty }
 }
 
 struct OpenRouterSnapshot {

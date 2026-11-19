@@ -1,10 +1,14 @@
 # Third-party notices
 
-The 11 CodexBar provider logo SVGs listed in `Assets/Providers/sources.json` are sourced from [CodexBar's public Resources directory](https://github.com/steipete/CodexBar/tree/main/Sources/CodexBar/Resources), under its MIT license. Source URLs and Git blob identifiers are recorded in that file, which is also included in the application bundle. Their PNG assets are transparent rasterizations of the SVGs. The OpenRouter icon is original BurndownBar artwork and is recorded separately in the same file. Provider trademarks remain the property of their respective owners.
+The provider icons listed in `Assets/Providers/sources.json` were obtained from the providers' own websites or official projects. The record includes each source URL and a SHA-256 digest of the downloaded source file. The 128-pixel PNGs bundled with BurndownBar are monochrome renderings of those marks for use in the menu bar. The OpenRouter icon is original BurndownBar artwork.
+
+Provider names and marks belong to their respective owners. They identify compatible services; their inclusion does not imply sponsorship or endorsement. BurndownBar's MIT license covers its own code and original artwork, not these provider trademarks.
+
+The Copilot mark is from GitHub's [Primer Octicons](https://github.com/primer/octicons) project, which is distributed under the MIT license:
 
 MIT License
 
-Copyright (c) 2026 Peter Steinberger
+Copyright (c) 2026 GitHub Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

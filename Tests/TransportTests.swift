@@ -267,9 +267,6 @@ enum TransportTests {
                 case "/api/v1/datasets/app-rankings":
                     guard auth == "Bearer or-std-fixture" else { return (403, ["error": "standard key required"]) }
                     return (200, ["data": [["rank": 1, "app_name": "Aider", "total_tokens": "2000"]]])
-                case "/api/v1/classifications/task":
-                    guard auth == "Bearer or-std-fixture" else { return (403, ["error": "standard key required"]) }
-                    return (200, ["categories": [["category": "Code", "token_share": 0.45, "usage_share": 0.4]]])
                 default: throw URLError(.unsupportedURL)
                 }
             }
@@ -278,7 +275,7 @@ enum TransportTests {
             check(orMgmt.costs?.today.dollars == 1.25 && orMgmt.openRouter?.endpoints.first?.providerName == "OpenAI", "OpenRouter analytics and endpoint health transport")
             check(orMgmt.openRouter?.hasStandardKey == true && orMgmt.openRouter?.rankings?.topModels.first?.model == "openai/gpt-4o"
                   && orMgmt.openRouter?.rankings?.topApps.first?.name == "Aider", "OpenRouter dual-key fetches rankings via standard key alongside management key")
-            let orStd = try await independent.additional(.openrouter, key: "or-std-fixture")
+            let orStd = try await independent.additional(.openrouter, key: "or-std-fixture", standardKey: "or-std-fixture")
             check(orStd.openRouter?.isManagementKey == false && orStd.windows.first?.remaining == 70, "OpenRouter 403 falls back cleanly to standard key")
 
             var patchedLimit = false, toggledZDR = false
@@ -297,6 +294,49 @@ enum TransportTests {
             try await independent.updateOpenRouterKey(hash: "k1", limitUSD: 30, limitReset: "monthly", apiKey: "or-mgmt-fixture")
             try await independent.setOpenRouterZDR(enabled: false, guardrailID: "g1", keyHashes: ["k1"], apiKey: "or-mgmt-fixture")
             check(patchedLimit && toggledZDR, "OpenRouter key cap and ZDR guardrail PATCH mutations")
+
+            var createdDisabled = false, assignedKeys = false, enabledAfterAssignment = false
+            FixtureURLProtocol.handler = { request in
+                guard request.value(forHTTPHeaderField: "Authorization") == "Bearer or-mgmt-fixture" else { return (401, [:]) }
+                switch (request.url!.path, request.httpMethod ?? "") {
+                case ("/api/v1/guardrails", "POST"):
+                    let data = request.httpBody ?? request.httpBodyStream.map { stream -> Data in
+                        stream.open()
+                        defer { stream.close() }
+                        var data = Data()
+                        var buffer = [UInt8](repeating: 0, count: 4096)
+                        while stream.hasBytesAvailable {
+                            let count = stream.read(&buffer, maxLength: buffer.count)
+                            if count > 0 { data.append(buffer, count: count) } else { break }
+                        }
+                        return data
+                    }
+                    let body = data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? JSON }
+                    createdDisabled = body?["enforce_zdr"] as? Bool == false
+                    return (200, ["data": ["id": "g2"]])
+                case ("/api/v1/guardrails/g2/keys/bulk-assign", "POST"):
+                    assignedKeys = createdDisabled
+                    return (200, ["data": [:]])
+                case ("/api/v1/guardrails/g2", "PATCH"):
+                    enabledAfterAssignment = assignedKeys
+                    return (200, ["data": ["id": "g2", "enforce_zdr": true]])
+                default: throw URLError(.unsupportedURL)
+                }
+            }
+            try await independent.setOpenRouterZDR(enabled: true, guardrailID: nil, keyHashes: ["k1"], apiKey: "or-mgmt-fixture")
+            check(createdDisabled && assignedKeys && enabledAfterAssignment, "OpenRouter ZDR attaches keys before enabling a new guardrail")
+
+            var patchedAfterFailure = false
+            FixtureURLProtocol.handler = { request in
+                if request.url!.path == "/api/v1/guardrails/g1/keys/bulk-assign" { return (500, [:]) }
+                if request.url!.path == "/api/v1/guardrails/g1" { patchedAfterFailure = true; return (200, [:]) }
+                throw URLError(.unsupportedURL)
+            }
+            var assignmentFailed = false
+            do {
+                try await independent.setOpenRouterZDR(enabled: true, guardrailID: "g1", keyHashes: ["k1"], apiKey: "or-mgmt-fixture")
+            } catch { assignmentFailed = true }
+            check(assignmentFailed && !patchedAfterFailure, "OpenRouter ZDR assignment failure prevents enforcement")
         } catch {
             fputs("FAIL: transport integration: \(error.localizedDescription)\n", stderr); exit(1)
         }
@@ -325,6 +365,46 @@ enum TransportTests {
                   "Artificial Analysis public leaderboard fills time per task for free keys")
         } catch {
             fputs("FAIL: Artificial Analysis transport: \(error.localizedDescription)\n", stderr); exit(1)
+        }
+        FixtureURLProtocol.handler = { request in
+            guard request.url!.path == "/api/alpha/decisions",
+                  request.httpMethod == "POST",
+                  request.value(forHTTPHeaderField: "Authorization") == "Bearer or-std-fixture" else {
+                return (401, ["error": ["message": "unauthorized"]])
+            }
+            let body = (request.httpBody ?? request.httpBodyStream.map { stream -> Data in
+                stream.open()
+                defer { stream.close() }
+                var data = Data()
+                var buffer = [UInt8](repeating: 0, count: 4096)
+                while stream.hasBytesAvailable {
+                    let count = stream.read(&buffer, maxLength: buffer.count)
+                    if count > 0 { data.append(buffer, count: count) } else { break }
+                }
+                return data
+            }).flatMap { try? JSONSerialization.jsonObject(with: $0) as? JSON }
+            let criteria = ((body?["questions"] as? JSON)?["recommended_model"] as? JSON)?["criteria"] as? [String: String]
+            let firstKey = criteria?.keys.sorted().first ?? "model_1"
+            return (200, [
+                "id": "gen-dec-fixture",
+                "model": "typesafe/jev-1.14",
+                "provider": "TypeSafe",
+                "answers": [
+                    "recommended_model": ["type": "choice", "choice": firstKey, "probabilities": [firstKey: 0.91], "confidence": 0.91],
+                    "tier": ["type": "choice", "choice": "balanced", "confidence": 0.87],
+                    "spend_efficiency": ["type": "score", "score": 2, "confidence": 0.82],
+                    "cheapness_priority": ["type": "noul", "noul": 0.42]
+                ],
+                "usage": ["input_tokens": 220, "output_tokens": 0, "cost": 0.000009]
+            ])
+        }
+        do {
+            let context = JevContextBuilder.build(accounts: [], localUsage: [:], artificialAnalysis: nil, prices: [:], task: "Refactor SwiftUI view")
+            let result = try await JevClassifierClient(configuration: configuration()).classify(context: context, apiKey: "or-std-fixture")
+            check(result.jevModel == "typesafe/jev-1.14" && result.tier == .balanced && result.recommendedCandidate != nil && result.inputTokens == 220,
+                  "Jev Decisions API POST request and structured answer parsing")
+        } catch {
+            fputs("FAIL: Jev classifier transport: \(error.localizedDescription)\n", stderr); exit(1)
         }
         FixtureURLProtocol.handler = nil
         print("Passed \(checks) transport checks using isolated HTTP fixtures; no live credentials or network requests.")

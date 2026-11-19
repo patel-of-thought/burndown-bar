@@ -24,7 +24,7 @@ actor OpenRouterPricingCache {
     }
 }
 
-/// Caches OpenRouter Data API global rankings (`rankings-daily`, `app-rankings`, `classifications/task`) for 1 hour.
+/// Caches OpenRouter Data API global rankings (`rankings-daily`, `app-rankings`) for 1 hour.
 actor OpenRouterRankingsCache {
     static let shared = OpenRouterRankingsCache()
 
@@ -53,9 +53,8 @@ actor OpenRouterRankingsCache {
         let headers = ["Authorization": "Bearer \(standardKey)"]
         async let modelsReq = try? client.request(url: Self.modelsURL(now: now), provider: "OpenRouter", headers: headers)
         async let appsReq = try? client.request(url: "https://openrouter.ai/api/v1/datasets/app-rankings?sort=popular", provider: "OpenRouter", headers: headers)
-        async let tasksReq = try? client.request(url: "https://openrouter.ai/api/v1/classifications/task", provider: "OpenRouter", headers: headers)
 
-        let snapshot = AdditionalParsers.openRouterRankings(modelsJSON: await modelsReq, appsJSON: await appsReq, tasksJSON: await tasksReq)
+        let snapshot = AdditionalParsers.openRouterRankings(modelsJSON: await modelsReq, appsJSON: await appsReq)
         if let snapshot {
             cached = snapshot
             cachedKeySuffix = suffix

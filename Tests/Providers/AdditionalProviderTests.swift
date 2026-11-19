@@ -131,23 +131,19 @@ enum AdditionalProviderTests {
                 ["date": "2026-11-18", "model_permaslug": "anthropic/claude-sonnet-4", "total_tokens": 700],
                 ["date": "2026-11-18", "model_permaslug": "other", "total_tokens": 300]
             ]],
-            appsJSON: ["data": [["rank": 1, "app_name": "OpenCode", "total_tokens": "500000", "total_requests": 100]]],
-            tasksJSON: ["categories": [["category": "Code", "token_share": 0.42, "usage_share": 0.4, "classifications": [
-                ["task": "code-generation", "token_share": 0.3, "usage_share": 0.25]
-            ]]]]
+            appsJSON: ["data": [["rank": 1, "app_name": "OpenCode", "total_tokens": "500000", "total_requests": 100]]]
         )
         check(orRankings?.topModels.count == 1 && orRankings?.topModels.first?.sharePercent == 70, "OpenRouter rankings excludes 'other' row from leaderboard while keeping total denominator")
         let periodRankings = AdditionalParsers.openRouterRankings(modelsJSON: ["meta": ["as_of": "2026-11-18T00:00:00Z"], "data": [
             ["date": "2026-11-17", "model_permaslug": "openai/current", "total_tokens": "9007199254740993"],
             ["date": "2026-11-16", "model_permaslug": "openai/previous", "total_tokens": "100"],
             ["date": "2026-11-10", "model_permaslug": "openai/previous", "total_tokens": "50"]
-        ]], appsJSON: nil, tasksJSON: nil)
+        ]], appsJSON: nil)
         check(periodRankings?.models(for: .today).first?.totalTokens == 9_007_199_254_740_993,
               "OpenRouter ranking token strings retain 64-bit precision")
         check(periodRankings?.models(for: .week).count == 2 && periodRankings?.models(for: .month).count == 2,
               "OpenRouter rankings aggregate daily rows into week and month leaderboards")
         check(orRankings?.topApps.first?.name == "OpenCode" && orRankings?.topApps.first?.totalTokens == 500_000, "OpenRouter stringified app token counts parsed")
-        check(orRankings?.taskShares.first?.name == "code-generation" && orRankings?.taskShares.first?.tokenSharePercent == 30, "OpenRouter task share normalized to percent")
 
         // Direct Codex credential sources.
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("burndown-codex-tests-\(UUID().uuidString)")

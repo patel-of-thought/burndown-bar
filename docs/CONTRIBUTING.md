@@ -22,9 +22,9 @@ Contributions are welcome — especially new providers, parser edge-case fixes, 
 
 1. **Register the origin**: Add a case to `AccountOrigin` in [`Sources/Providers/Shared/ProviderModels.swift`](../Sources/Providers/Shared/ProviderModels.swift) (and `additional`), plus its display name in `Account.providerName(for:)` in [`Sources/Models.swift`](../Sources/Models.swift).
 2. **Add brand assets**:
-   - Place a `128x128` 8-bit RGBA template `.png` (and `.svg` source) in `Assets/Providers/`.
+   - Place a `128x128` 8-bit RGBA template `.png` in `Assets/Providers/`, and retain the official source file in `Assets/Providers/originals/`.
    - Register it in [`Sources/Providers/ProviderLogo.swift`](../Sources/Providers/ProviderLogo.swift) and [`Sources/Providers/ProviderTheme.swift`](../Sources/Providers/ProviderTheme.swift).
-   - Record attribution in `Assets/Providers/sources.json` if third-party.
+   - Record the official source URL, local source filename, SHA-256 digest, and trademark attribution in `Assets/Providers/sources.json`.
 3. **Allowlist & credentials**:
    - Add the API host to the `allowed` list in [`Sources/Providers/Shared/SubscriptionClient.swift`](../Sources/Providers/Shared/SubscriptionClient.swift) (HTTPS only; `NoRedirectDelegate` blocks credential-leaking redirects).
    - Add any environment variable names to `SubscriptionCredentials.keyVariables` in [`Sources/Providers/Shared/ProviderCredentials.swift`](../Sources/Providers/Shared/ProviderCredentials.swift).

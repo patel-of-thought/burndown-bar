@@ -30,43 +30,58 @@ extension SubscriptionClient {
         guard let apiKey = suppliedKey ?? SubscriptionCredentials.namedKey(account: "openrouter-key", variable: "OPENROUTER_MANAGEMENT_KEY") else {
             throw SubscriptionError.message("OpenRouter Management Key is required to update guardrails.")
         }
-        let headers = ["Authorization": "Bearer \(apiKey)"]
-        if let guardrailID, Self.safeID(guardrailID) {
-            let result = try await requestStatus(
-                url: "https://openrouter.ai/api/v1/guardrails/\(guardrailID)",
-                provider: "OpenRouter",
-                method: "PATCH",
-                headers: headers,
-                body: ["enforce_zdr": enabled]
-            )
-            if result.status == 401 || result.status == 403 { throw SubscriptionError.unauthorized("OpenRouter") }
-            guard (200...299).contains(result.status) else { throw SubscriptionError.http(result.status) }
-            return
-        }
-
-        let created = try await requestStatus(
-            url: "https://openrouter.ai/api/v1/guardrails",
-            provider: "OpenRouter",
-            method: "POST",
-            headers: headers,
-            body: ["name": "BurndownBar ZDR", "enforce_zdr": enabled]
-        )
-        if created.status == 401 || created.status == 403 { throw SubscriptionError.unauthorized("OpenRouter") }
-        guard (200...299).contains(created.status),
-              let json = created.value as? JSON,
-              let newID = string((json["data"] as? JSON)?["id"] ?? json["id"]),
-              Self.safeID(newID) else {
-            throw SubscriptionError.http(created.status)
-        }
         let validHashes = keyHashes.filter(Self.safeID(_:))
-        if !validHashes.isEmpty {
-            _ = try? await requestStatus(
-                url: "https://openrouter.ai/api/v1/guardrails/\(newID)/keys/bulk-assign",
+        if enabled && validHashes.isEmpty {
+            throw SubscriptionError.message("No active OpenRouter keys are available. Refresh keys before enabling ZDR.")
+        }
+        let headers = ["Authorization": "Bearer \(apiKey)"]
+        let targetID: String
+        if let guardrailID, Self.safeID(guardrailID) {
+            targetID = guardrailID
+        } else {
+            let created = try await requestStatus(
+                url: "https://openrouter.ai/api/v1/guardrails",
                 provider: "OpenRouter",
                 method: "POST",
                 headers: headers,
-                body: ["key_hashes": validHashes]
+                body: ["name": "BurndownBar ZDR", "enforce_zdr": false]
             )
+            if created.status == 401 || created.status == 403 { throw SubscriptionError.unauthorized("OpenRouter") }
+            guard (200...299).contains(created.status),
+                  let json = created.value as? JSON,
+                  let newID = string((json["data"] as? JSON)?["id"] ?? json["id"]),
+                  Self.safeID(newID) else {
+                throw SubscriptionError.http(created.status)
+            }
+            targetID = newID
         }
+
+        if enabled {
+            let assignment: (status: Int, value: Any)
+            do {
+                assignment = try await requestStatus(
+                    url: "https://openrouter.ai/api/v1/guardrails/\(targetID)/keys/bulk-assign",
+                    provider: "OpenRouter",
+                    method: "POST",
+                    headers: headers,
+                    body: ["key_hashes": validHashes]
+                )
+            } catch {
+                throw SubscriptionError.message("Active keys could not be attached to the ZDR guardrail. Check OpenRouter before relying on ZDR.")
+            }
+            guard (200...299).contains(assignment.status) else {
+                throw SubscriptionError.message("OpenRouter rejected the active key assignment (HTTP \(assignment.status)). Check OpenRouter before relying on ZDR.")
+            }
+        }
+
+        let result = try await requestStatus(
+            url: "https://openrouter.ai/api/v1/guardrails/\(targetID)",
+            provider: "OpenRouter",
+            method: "PATCH",
+            headers: headers,
+            body: ["enforce_zdr": enabled]
+        )
+        if result.status == 401 || result.status == 403 { throw SubscriptionError.unauthorized("OpenRouter") }
+        guard (200...299).contains(result.status) else { throw SubscriptionError.http(result.status) }
     }
 }

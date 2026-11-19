@@ -1,69 +1,81 @@
 [
   {
     "name": "codex",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-codex.svg",
-    "git_blob": "0d789fb7546d453607b9f88715d8fd31416fb755",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://chatgpt.com/cdn/assets/favicon-c80e01a96037.svg",
+    "source_file": "originals/codex.svg",
+    "source_sha256": "8f2de046d22cfecfe3917cf87ff1ce49a48d79956f6b18be3b37db29148a0aeb",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "cursor",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-cursor.svg",
-    "git_blob": "e97835e4d84e2cd07d612af8c05e8c523f49e8f5",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://cursor.com/marketing-static/icon-192x192-light.png",
+    "source_file": "originals/cursor.png",
+    "source_sha256": "267649be4d2a26dea632bb6cc1f7a400daa117e5cd3335a140ba5cb0148aaedc",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "factory",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-factory.svg",
-    "git_blob": "f7807d8abe9adc9cb52ed1f077c563757485ed9f",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://factory.ai/favicon.svg",
+    "source_file": "originals/factory.svg",
+    "source_sha256": "416ea4962d7b0b8be8bec7f7190c13c22d5f20fdcac401aa72886fd5c81d2fb2",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "opencode",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-opencode.svg",
-    "git_blob": "eaebc91bd5b94664f1ec4539783bef598a166f6c",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://opencode.ai/apple-touch-icon-v3.png",
+    "source_file": "originals/opencode.png",
+    "source_sha256": "2f2d5687a641f7fc1c3931072249a5984660375c091064fe8b374e4e43a8656c",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "antigravity",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-antigravity.svg",
-    "git_blob": "a915939711b89d6d1f7c6b53ee5708e518fb7ed2",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://antigravity.google/apple-touch-icon.png",
+    "source_file": "originals/antigravity.png",
+    "source_sha256": "44e2199f65e2d66fb8134de2f28da020420760f59de8bcb4557365136cb38b24",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "copilot",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-copilot.svg",
-    "git_blob": "c5b24b5fa8afec5058f91e19514d80fa83eb80e6",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://raw.githubusercontent.com/primer/octicons/main/icons/copilot-24.svg",
+    "source_file": "originals/copilot.svg",
+    "source_sha256": "eeafb3c2f333e04ccf7d031ae215f7adafaed4c6352556b0bf79496e048bcdd7",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied.",
+    "license": "Primer Octicons MIT; GitHub Copilot mark is a GitHub trademark"
   },
   {
     "name": "warp",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-warp.svg",
-    "git_blob": "30a992a08745cb19221c6c98feb7c71b52f5cd88",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://www.warp.dev/favicon-128x128.png",
+    "source_file": "originals/warp.png",
+    "source_sha256": "f3571d0b0aa3eaa2f5ebed899eda8a7dd2d28ec955e57f7e3e5984f5a00f8643",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "zed",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-zed.svg",
-    "git_blob": "fdb37112bcc5c542e6615707da6997874f4d0e9c",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://zed.dev/favicon_black_64.png",
+    "source_file": "originals/zed.png",
+    "source_sha256": "e6d703fa4b26308665ef48a2a75029703f7efbafa4727095514a47f1838cace0",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "grok",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-grok.svg",
-    "git_blob": "876acc82c28dba86f6c76a393cb66bcdd161c695",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://grok.com/images/android-chrome-512x512.png",
+    "source_file": "originals/grok.png",
+    "source_sha256": "3a462c3c2524733c173bb05c431de737812f8219db8fa115b0025d12a347e086",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "claude",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-claude.svg",
-    "git_blob": "9f66bdbb44af7bc3a96bbffe2dca85c5ddb84297",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://claude.com/apple-touch-icon.png",
+    "source_file": "originals/claude.png",
+    "source_sha256": "dcc58271920750441afd420268045addb593ee01e68b4e05a13f7eface7e65d3",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "gemini",
-    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-gemini.svg",
-    "git_blob": "869ae75bc33159b2f6a1665cb74acaa80200b751",
-    "license": "CodexBar MIT; provider marks belong to their respective owners"
+    "source": "https://www.gstatic.com/lamda/images/gemini_sparkle_4g_512_lt_f94943af3be039176192d.png",
+    "source_file": "originals/gemini.png",
+    "source_sha256": "5e7cfecaa53f4f65a313fe89b0f389548126544a78fad8489510c70ae641a4a1",
+    "rights": "Provider trademark; used to identify the service. No endorsement implied."
   },
   {
     "name": "openrouter",

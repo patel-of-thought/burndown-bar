@@ -80,8 +80,7 @@ extension SubscriptionClient {
         let headers = ["Authorization": "Bearer \(standardKey)"]
         async let modelsReq = try? request(url: OpenRouterRankingsCache.modelsURL(now: now), provider: "OpenRouter", headers: headers)
         async let appsReq = try? request(url: "https://openrouter.ai/api/v1/datasets/app-rankings?sort=popular", provider: "OpenRouter", headers: headers)
-        async let tasksReq = try? request(url: "https://openrouter.ai/api/v1/classifications/task", provider: "OpenRouter", headers: headers)
-        return AdditionalParsers.openRouterRankings(modelsJSON: await modelsReq, appsJSON: await appsReq, tasksJSON: await tasksReq)
+        return AdditionalParsers.openRouterRankings(modelsJSON: await modelsReq, appsJSON: await appsReq)
     }
 
     private func queryOpenRouterAnalytics(headers: [String: String], dimensions: [String], extraMetrics: [String], days: Int = 30, now: Date) async -> JSON? {

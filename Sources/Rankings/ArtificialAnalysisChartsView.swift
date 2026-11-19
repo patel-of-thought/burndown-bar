@@ -2,8 +2,9 @@ import SwiftUI
 
 struct ArtificialAnalysisChartsView: View {
     @ObservedObject var store: DashboardStore
+    @State private var selectedMetric = Metric.intelligence
 
-    private enum Metric: CaseIterable {
+    private enum Metric: CaseIterable, Hashable {
         case intelligence, time, cost
         var title: String {
             switch self {
@@ -50,9 +51,17 @@ struct ArtificialAnalysisChartsView: View {
                 Link("Leaderboard", destination: URL(string: "https://artificialanalysis.ai/leaderboards/models")!)
                     .font(.caption)
             }
-            Text("The same top 12 intelligence models are compared across all three graphs.")
+            Text("Compare the same top 12 intelligence models across the three metrics.")
                 .font(.caption).foregroundStyle(.secondary)
-            if !store.hasArtificialAnalysisKey && store.artificialAnalysis == nil {
+            Picker("Artificial Analysis metric", selection: $selectedMetric) {
+                ForEach(Metric.allCases, id: \.self) { metric in
+                    Text(metric.title).tag(metric)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .accessibilityLabel("Artificial Analysis metric")
+            if store.artificialAnalysis == nil && !store.hasArtificialAnalysisKey {
                 keyEntry
             } else {
                 if store.artificialAnalysisLoading { ProgressView("Loading model data…").controlSize(.small) }
@@ -60,9 +69,7 @@ struct ArtificialAnalysisChartsView: View {
                     Text(error).font(.caption).foregroundStyle(.orange)
                 }
                 if let snapshot = store.artificialAnalysis {
-                    ForEach(Metric.allCases, id: \.title) { metric in
-                        graph(metric, models: snapshot.topModels, tier: snapshot.tier)
-                    }
+                    graph(selectedMetric, models: snapshot.topModels, tier: snapshot.tier)
                     Text("Source: Artificial Analysis \(snapshot.timeFromPublicLeaderboard ? "API + public leaderboard" : "API") · fetched \(snapshot.fetchedAt.formatted(date: .abbreviated, time: .shortened)) · \(snapshot.tier.capitalized) tier")
                         .font(.caption2).foregroundStyle(.tertiary)
                 }

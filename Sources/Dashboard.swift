@@ -4,7 +4,7 @@ private let accent = Color.accentColor
 private let subscriptionAccent = Color.orange
 
 private enum RankingCategory: String, CaseIterable, Identifiable {
-    case models = "Models", apps = "Apps", tasks = "Tasks"
+    case models = "Models", apps = "Apps"
     var id: String { rawValue }
 }
 
@@ -29,6 +29,7 @@ private extension View {
 struct Dashboard: View {
     @ObservedObject var store: DashboardStore
     var expanded = false
+    var isPreview = false
     @State private var rankingCategory = RankingCategory.models
     @State private var rankingPeriod = OpenRouterRankingPeriod.week
     @State private var rankingSource = RankingSource.openRouter
@@ -37,7 +38,7 @@ struct Dashboard: View {
             header
             if !store.settingsVisible && !store.connectionVisible {
                 sectionPicker
-                if store.section != .rankings { tabs }
+                if store.section.showsAccounts { tabs }
             }
             Divider()
             if expanded { page }
@@ -55,7 +56,7 @@ struct Dashboard: View {
             else if store.connectionVisible && value.translation.width < -60 { store.closeConnectionSettings() }
             else if !store.settingsVisible && !store.connectionVisible {
                 if value.translation.width > 60 { store.settingsVisible = true }
-                else if value.translation.width < -60, store.section != .rankings, store.tab != "Overview", let account = store.selected,
+                else if value.translation.width < -60, store.section.showsAccounts, store.tab != "Overview", let account = store.selected,
                         let origin = account.origin == .proxy ? account.proxyOrigin : account.origin {
                     store.openConnectionSettings(origin)
                 }
@@ -84,6 +85,8 @@ struct Dashboard: View {
             }
             if store.section == .rankings {
                 rankings
+            } else if store.section == .modelAdvisor {
+                JevClassifierView(store: store, isPreview: isPreview)
             } else if store.sectionAccounts.isEmpty {
                 emptyState
             } else if store.tab == "Overview" {
@@ -131,6 +134,9 @@ struct Dashboard: View {
                 ForEach(DashboardSection.allCases) { Text($0.title).tag($0) }
             }
             .pickerStyle(.segmented)
+            .controlSize(.small)
+            .labelsHidden()
+            .accessibilityLabel("Dashboard section")
             .padding(.horizontal, 16).padding(.bottom, 10)
     }
 
@@ -225,9 +231,14 @@ struct Dashboard: View {
         VStack(alignment: .leading, spacing: 14) {
             Picker("Ranking source", selection: $rankingSource) {
                 ForEach(RankingSource.allCases) { Text($0.rawValue).tag($0) }
-            }.pickerStyle(.segmented)
-            if rankingSource == .openRouter { openRouterRankings }
-            else { ArtificialAnalysisChartsView(store: store) }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .accessibilityLabel("Ranking source")
+            switch rankingSource {
+            case .openRouter: openRouterRankings
+            case .artificialAnalysis: ArtificialAnalysisChartsView(store: store)
+            }
         }
     }
 
@@ -245,12 +256,18 @@ struct Dashboard: View {
                !snapshot.isEmpty {
                 Picker("Ranking category", selection: $rankingCategory) {
                     ForEach(RankingCategory.allCases) { Text($0.rawValue).tag($0) }
-                }.pickerStyle(.segmented)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .accessibilityLabel("Ranking category")
                 switch rankingCategory {
                 case .models:
                     Picker("Ranking period", selection: $rankingPeriod) {
                         ForEach(OpenRouterRankingPeriod.allCases) { Text($0.title).tag($0) }
-                    }.pickerStyle(.segmented)
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .accessibilityLabel("Ranking period")
                     Text("Models ranked by tokens in the most recent complete \(rankingPeriod == .today ? "day" : rankingPeriod == .week ? "7 days" : "30 days").")
                         .font(.caption).foregroundStyle(.secondary)
                     let models = snapshot.models(for: rankingPeriod)
@@ -290,16 +307,6 @@ struct Dashboard: View {
                         }.card(padding: 10)
                     }
                     if snapshot.topApps.isEmpty { Text("No app ranking data available.").font(.callout).foregroundStyle(.secondary) }
-                case .tasks:
-                    ForEach(snapshot.taskShares) { item in
-                        HStack {
-                            Text(item.name).font(.callout.weight(.medium)).lineLimit(1)
-                            Spacer()
-                            Text(String(format: "%.1f%% of tokens", item.tokenSharePercent))
-                                .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                        }.card(padding: 10)
-                    }
-                    if snapshot.taskShares.isEmpty { Text("No task ranking data available.").font(.callout).foregroundStyle(.secondary) }
                 }
                 Text("Source: OpenRouter (openrouter.ai/rankings)\(snapshot.asOf.map { ", as of \($0)" } ?? ""). Licensed under CC BY 4.0.")
                     .font(.caption2).foregroundStyle(.tertiary)
@@ -623,7 +630,7 @@ struct Dashboard: View {
                                     Text("Saved").font(.caption2).foregroundStyle(.green)
                                 }
                             }
-                            SecureField("Global rankings, Top Apps & task share", text: $store.openRouterStandardKey)
+                            SecureField("Global model & app rankings", text: $store.openRouterStandardKey)
                                 .textFieldStyle(.roundedBorder).accessibilityLabel("OpenRouter Standard API Key")
                         }
                         Button("Save & connect") { store.saveConnectionCredential() }
@@ -768,7 +775,7 @@ struct Dashboard: View {
             default: return "Paste a Cookie header or WorkosCursorSessionToken value and choose Save & connect."
             }
         case .claude: return "Open Claude in your default browser and save its Cookie header to read subscription quotas."
-        case .openrouter: return "Add both keys for full insights: a Management Key (credits, 30d tokens/cache & key caps) and a Standard API Key (global rankings, Top Apps & task share)."
+        case .openrouter: return "Add both keys for full insights: a Management Key (credits, 30d tokens/cache & key caps) and a Standard API Key (global model & app rankings)."
         default: return ""
         }
     }

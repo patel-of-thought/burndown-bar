@@ -71,8 +71,7 @@ import SwiftUI
                         OpenRouterGlobalModelRank(model: "anthropic/claude-sonnet-4", totalTokens: 142_000_000_000, sharePercent: 24.5, changePercent: 12.4),
                         OpenRouterGlobalModelRank(model: "openai/gpt-4o", totalTokens: 98_500_000_000, sharePercent: 17.0, changePercent: -2.1)
                     ],
-                    topApps: [OpenRouterGlobalAppRank(rank: 1, name: "OpenCode", totalTokens: 82_000_000_000, requests: 910_000)],
-                    taskShares: [OpenRouterTaskShare(name: "code-generation", tokenSharePercent: 34.2, usageSharePercent: 31.0)]
+                    topApps: [OpenRouterGlobalAppRank(rank: 1, name: "OpenCode", totalTokens: 82_000_000_000, requests: 910_000)]
                 ),
                 statusMessage: "$2.14/day avg · ~32d runway"
             )
@@ -117,6 +116,20 @@ import SwiftUI
         ], tier: "free", fetchedAt: now, timeFromPublicLeaderboard: true)
         render(ArtificialAnalysisChartsView(store: analysisStore).frame(width: 398).padding(12),
                to: output.appendingPathComponent("artificial-analysis-charts-preview.png"))
+
+        let classifierStore = DashboardStore(persistPreferences: false)
+        classifierStore.jevConfig.autoClassify = false
+        for preset in JevClassifierConfig.presets {
+            classifierStore.jevConfig.jevModel = preset.id
+            let name = preset.id.split(separator: "/").last!
+            render(JevClassifierView(store: classifierStore, configExpanded: true, isPreview: true).frame(width: 398).padding(12),
+                   to: output.appendingPathComponent("classifier-\(name)-preview.png"))
+        }
+
+        classifierStore.jevConfig.jevModel = JevClassifierConfig.presets[0].id
+        classifierStore.selectSection(.modelAdvisor)
+        render(Dashboard(store: classifierStore, expanded: true, isPreview: true),
+               to: output.appendingPathComponent("model-advisor-root-preview.png"))
 
         let settings = DashboardStore(persistPreferences: false)
         settings.accounts = accounts; settings.now = now; settings.settingsVisible = true

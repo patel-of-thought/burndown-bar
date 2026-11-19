@@ -61,8 +61,8 @@ extension AdditionalParsers {
         return account
     }
 
-    static func openRouterRankings(modelsJSON: JSON?, appsJSON: JSON?, tasksJSON: JSON?) -> OpenRouterRankingsSnapshot? {
-        let meta = (modelsJSON?["meta"] as? JSON) ?? (appsJSON?["meta"] as? JSON) ?? (tasksJSON?["meta"] as? JSON)
+    static func openRouterRankings(modelsJSON: JSON?, appsJSON: JSON?) -> OpenRouterRankingsSnapshot? {
+        let meta = (modelsJSON?["meta"] as? JSON) ?? (appsJSON?["meta"] as? JSON)
         let asOf = string(meta?["as_of"])
 
         // Aggregate daily top-50 rows into the same trailing windows used by OpenRouter's leaderboard.
@@ -119,29 +119,8 @@ extension AdditionalParsers {
             }
         }
 
-        // 3. Task classifications
-        var taskShares: [OpenRouterTaskShare] = []
-        if let categories = tasksJSON?["categories"] as? [JSON] {
-            for cat in categories {
-                if let sub = cat["classifications"] as? [JSON], !sub.isEmpty {
-                    for item in sub {
-                        guard let name = string(item["task"] ?? item["name"]) else { continue }
-                        let tokShare = normalizePercentRatio(number(item["token_share"])) ?? 0
-                        let useShare = normalizePercentRatio(number(item["usage_share"])) ?? 0
-                        taskShares.append(OpenRouterTaskShare(name: name, tokenSharePercent: tokShare, usageSharePercent: useShare))
-                    }
-                } else if let name = string(cat["category"]) {
-                    let tokShare = normalizePercentRatio(number(cat["token_share"])) ?? 0
-                    let useShare = normalizePercentRatio(number(cat["usage_share"])) ?? 0
-                    taskShares.append(OpenRouterTaskShare(name: name, tokenSharePercent: tokShare, usageSharePercent: useShare))
-                }
-            }
-            taskShares.sort { max($0.tokenSharePercent, $0.usageSharePercent) > max($1.tokenSharePercent, $1.usageSharePercent) }
-            taskShares = Array(taskShares.prefix(8))
-        }
-
         let snapshot = OpenRouterRankingsSnapshot(asOf: asOf, topModels: modelPeriods[.week] ?? [],
-            modelPeriods: modelPeriods, topApps: topApps, taskShares: taskShares)
+            modelPeriods: modelPeriods, topApps: topApps)
         return snapshot.isEmpty ? nil : snapshot
     }
 
