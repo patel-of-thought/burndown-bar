@@ -84,7 +84,7 @@ Release preparation is tracked in [TODO.md](TODO.md). The current build is for l
 ### Build & Run
 
 ```sh
-git clone <your-repo-url>
+git clone https://github.com/patel-of-thought/burndown-bar.git
 cd burndown-bar
 bash build.sh
 open build/BurndownBar.app

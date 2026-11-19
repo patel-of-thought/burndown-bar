@@ -4,7 +4,7 @@ The app builds on macOS with `BURNDOWNBAR_HEADLESS=1 bash build.sh`. On 19 Novem
 
 ## Before the first public release
 
-- [ ] **Publish the source repository.** An initial local commit contains the source and assets; add the intended remote and push it. `build/`, `dist/`, `.DS_Store`, and `launch-video/` are ignored.
+- [x] **Publish the source repository.** The initial source and assets are committed to `main` and published to the intended GitHub remote. `build/`, `dist/`, `.DS_Store`, and `launch-video/` are ignored.
 - [x] **Add the project's license.** BurndownBar's code and original assets use MIT; provider icon attribution remains in `THIRD_PARTY_NOTICES.md`. The recorded SVG Git blob IDs were checked against all 11 local SVG files. Confirm the origin and redistribution rights of `AppIcon` and the screenshots before public release.
 - [x] **Set the app identity.** Keep `local.burndownbar` as the bundle identifier and Keychain service for the first release, preserving existing preferences and credentials.
 - [x] **Set the release version.** `Info.plist` is `1.0.0` with build number `6`; the dashboard reads the version from the bundle.
