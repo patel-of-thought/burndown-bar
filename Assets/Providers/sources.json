@@ -1,0 +1,68 @@
+[
+  {
+    "name": "codex",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-codex.svg",
+    "git_blob": "0d789fb7546d453607b9f88715d8fd31416fb755",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "cursor",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-cursor.svg",
+    "git_blob": "e97835e4d84e2cd07d612af8c05e8c523f49e8f5",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "factory",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-factory.svg",
+    "git_blob": "f7807d8abe9adc9cb52ed1f077c563757485ed9f",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "opencode",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-opencode.svg",
+    "git_blob": "eaebc91bd5b94664f1ec4539783bef598a166f6c",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "antigravity",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-antigravity.svg",
+    "git_blob": "a915939711b89d6d1f7c6b53ee5708e518fb7ed2",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "copilot",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-copilot.svg",
+    "git_blob": "c5b24b5fa8afec5058f91e19514d80fa83eb80e6",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "warp",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-warp.svg",
+    "git_blob": "30a992a08745cb19221c6c98feb7c71b52f5cd88",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "zed",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-zed.svg",
+    "git_blob": "fdb37112bcc5c542e6615707da6997874f4d0e9c",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "grok",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-grok.svg",
+    "git_blob": "876acc82c28dba86f6c76a393cb66bcdd161c695",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "claude",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-claude.svg",
+    "git_blob": "9f66bdbb44af7bc3a96bbffe2dca85c5ddb84297",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  },
+  {
+    "name": "gemini",
+    "source": "https://github.com/steipete/CodexBar/blob/main/Sources/CodexBar/Resources/ProviderIcon-gemini.svg",
+    "git_blob": "869ae75bc33159b2f6a1665cb74acaa80200b751",
+    "license": "CodexBar MIT; provider marks belong to their respective owners"
+  }
+]
