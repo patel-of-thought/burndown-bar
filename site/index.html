@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BurndownBar</title>
+  <meta name="description" content="A native macOS menu-bar app for subscription quota, token usage, cache reads, and inference spend.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="images/app-icon.png">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <nav class="bar">
+    <div class="bar-inner">
+      <a class="brand" href="#top">
+        <img src="images/app-icon.png" alt="" width="20" height="20">
+        BurndownBar
+      </a>
+      <div class="links">
+        <a href="#sources">Connections</a>
+        <a href="#inference">Inference</a>
+        <a href="#rankings">Rankings</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <header class="hero">
+      <img class="hero-icon" src="images/app-icon.png" alt="" width="112" height="112">
+      <h1>Your AI quotas,<br>in the menu bar.</h1>
+      <p class="lede">A native macOS menu-bar app for subscription quota, token usage, cache reads, and inference spend.</p>
+      <p class="meta">macOS 14 or later · SwiftUI and AppKit · No external packages</p>
+      <figure class="shot hero-shot">
+        <div class="window crop crop-overview">
+          <img src="images/screenshots/cursor.png?v=1.0.0" alt="Subscriptions — Cursor quota bars and reset countdowns" width="796" height="2856">
+        </div>
+      </figure>
+    </header>
+
+    <section class="providers" aria-label="Supported providers">
+      <p class="eyebrow">Works with</p>
+      <ul>
+        <li><span class="logo" style="--icon: url(images/providers/openrouter.png)"></span>OpenRouter</li>
+        <li><span class="logo" style="--icon: url(images/providers/codex.png)"></span>Codex</li>
+        <li><span class="logo" style="--icon: url(images/providers/cursor.png)"></span>Cursor</li>
+        <li><span class="logo" style="--icon: url(images/providers/factory.png)"></span>Droid</li>
+        <li><span class="logo" style="--icon: url(images/providers/opencode.png)"></span>OpenCode</li>
+        <li><span class="logo" style="--icon: url(images/providers/antigravity.png)"></span>Antigravity</li>
+        <li><span class="logo" style="--icon: url(images/providers/copilot.png)"></span>Copilot</li>
+        <li><span class="logo" style="--icon: url(images/providers/warp.png)"></span>Warp</li>
+        <li><span class="logo" style="--icon: url(images/providers/zed.png)"></span>Zed</li>
+        <li><span class="logo" style="--icon: url(images/providers/claude.png)"></span>Claude</li>
+        <li><span class="logo" style="--icon: url(images/providers/grok.png)"></span>Grok</li>
+      </ul>
+    </section>
+
+    <section class="feature" id="sources">
+      <div class="copy">
+        <p class="eyebrow">Connections</p>
+        <h2>CLIProxyAPI or direct.<br>Your choice.</h2>
+        <p>Read Codex, Grok, and Claude through the accounts already signed in to CLIProxyAPI, or connect each one directly. Switch them together or one at a time under Quota source.</p>
+        <p>Every other provider connects on its own. Credentials you save stay in the macOS Keychain.</p>
+      </div>
+      <figure class="shot">
+        <div class="window crop crop-sources">
+          <img src="images/screenshots/preferences.png?v=1.0.0" alt="Preferences — Quota source set per provider" width="796" height="2312">
+        </div>
+      </figure>
+    </section>
+
+    <section class="feature reverse" id="inference">
+      <div class="copy">
+        <p class="eyebrow">Inference</p>
+        <h2>Spend you can see.<br>Limits you can set.</h2>
+        <p>Connect OpenRouter with a Management key to see account credits, runway, and per-key spend next to your subscriptions.</p>
+        <p>Set a USD cap, pause or resume a key, and check Zero Data Retention guardrails without opening a browser.</p>
+      </div>
+      <figure class="shot">
+        <div class="window crop crop-inference">
+          <img src="images/screenshots/openrouter.png?v=1.0.0" alt="OpenRouter — Credits and key quotas" width="796" height="3502">
+        </div>
+      </figure>
+    </section>
+
+    <section class="feature" id="rankings">
+      <div class="copy">
+        <p class="eyebrow">Rankings</p>
+        <h2>Which models<br>developers actually use.</h2>
+        <p>OpenRouter rankings show top models, apps, and task share by tokens processed, today, this week, or this month.</p>
+        <p>Artificial Analysis compares the top 12 models by Intelligence Index, time per task, and cost per task.</p>
+      </div>
+      <figure class="shot">
+        <div class="window">
+          <img src="images/screenshots/rankings.png?v=1.0.0" alt="Rankings — OpenRouter and Artificial Analysis sources" width="796" height="1002">
+        </div>
+      </figure>
+    </section>
+  </main>
+
+  <footer>
+    <p>Provider logos come from <a href="https://github.com/steipete/CodexBar/tree/main/Sources/CodexBar/Resources">CodexBar</a> under the MIT license. Trademarks stay with their owners.</p>
+    <p>Rankings data from <a href="https://openrouter.ai/rankings">OpenRouter</a> under CC BY 4.0 and from Artificial Analysis.</p>
+  </footer>
+</body>
+</html>

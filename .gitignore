@@ -1,5 +1,6 @@
 build/
 dist/
+.wrangler/
 .DS_Store
 launch-video/
 .cursor/

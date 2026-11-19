@@ -21,3 +21,4 @@ The app builds on macOS with `BURNDOWNBAR_HEADLESS=1 bash build.sh`. On 19 Novem
 - [ ] Run `--render-previews` in a graphical macOS session and inspect all supported views at light/dark appearance and increased text size. The headless build skips native provider icon sizing checks.
 - [ ] Add a lightweight manual compatibility check for provider APIs before each release; mocked transport fixtures cannot detect upstream API changes.
 - [ ] Decide how users will report bugs and receive update notices, and link those channels from the README.
+- [ ] **Publish the website and its images to Cloudflare.** Log in with `npx wrangler login`, then run `site/publish.sh` to deploy `site/` as the `burndownbar` Workers static-assets site. Confirm the app icon, the four screenshots in `site/images/screenshots/`, and the provider logos in `site/images/providers/` load from the deployed URL, and that `wrangler.jsonc`, `publish.sh`, and `.assetsignore` are not served.
