@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BurndownBar</title>
   <meta name="description" content="A native macOS menu-bar app for subscription quota, token usage, cache reads, and inference spend.">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="dark">
   <link rel="canonical" href="https://patel-of-thought.github.io/burndown-bar/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BurndownBar">
@@ -23,129 +23,704 @@
   <meta name="twitter:description" content="Track AI coding subscriptions, token usage, cache reads, and inference spend in one native macOS app.">
   <meta name="twitter:image" content="https://patel-of-thought.github.io/burndown-bar/images/og-card.png">
   <link rel="icon" href="images/app-icon.png">
-  <link rel="stylesheet" href="site.css?v=2026-11-19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css?v=2026-11-20">
+  <script defer src="site.js?v=2026-11-20"></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="76b92212-207e-4ab1-8233-dcc8c1bf55c5"></script>
 </head>
 <body>
   <div class="bg" aria-hidden="true">
     <div class="neb neb-a"></div>
     <div class="neb neb-b"></div>
+    <div class="neb neb-c"></div>
+    <div class="grid-veil"></div>
     <img class="field" src="images/constellation.svg" alt="">
   </div>
-  <nav class="bar">
-    <div class="bar-inner">
-      <a class="brand" href="#top">
-        <img src="images/app-icon.png" alt="" width="20" height="20">
-        BurndownBar
-      </a>
-      <div class="links">
-        <a href="#inference">Inference</a>
-        <a href="#rankings">Rankings</a>
-        <a href="#advisor">Model Advisor</a>
-        <a href="#sources">Connections</a>
+
+  <!-- Living macOS Menu Bar -->
+  <nav class="menubar" aria-label="Primary navigation">
+    <div class="menubar-inner">
+      <div class="menubar-left">
+        <a class="brand" href="#top">
+          <img src="images/app-icon.png" alt="" width="18" height="18">
+          <span>BurndownBar</span>
+        </a>
+        <div class="links" role="list">
+          <a href="#inference" data-nav="inference">Inference</a>
+          <a href="#rankings" data-nav="rankings">Rankings</a>
+          <a href="#advisor" data-nav="advisor">Model Advisor</a>
+          <a href="#sources" data-nav="sources">Connections</a>
+        </div>
+      </div>
+
+      <div class="menubar-right">
+        <a class="runway-pill" href="#top" title="Scroll runway indicator — click to return to top">
+          <svg class="mini-ring" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <circle class="mini-ring-track" cx="12" cy="12" r="9" />
+            <circle class="mini-ring-arc" cx="12" cy="12" r="9" />
+          </svg>
+          <span class="runway-value" id="runway-pct">100%</span>
+          <span class="runway-label">left</span>
+        </a>
+        <span class="menubar-clock" id="menubar-clock" aria-hidden="true">09:41</span>
       </div>
     </div>
   </nav>
 
   <main id="top">
+    <!-- Asymmetric Hero Stage -->
     <header class="hero">
-      <img class="hero-icon" src="images/app-icon.png" alt="" width="112" height="112">
-      <h1>BurndownBar</h1>
-      <p class="catchline">May you not Burndown your AI tokens</p>
-      <p class="lede">Your AI quotas, in the menu bar. Track subscriptions, token usage, cache reads, and inference spend in one native macOS app.</p>
-      <div class="badges" aria-label="App details">
-        <span class="badge"><span class="badge-label">beta</span><span class="badge-value badge-release">0.0.1</span></span>
-        <span class="badge"><span class="badge-label">macOS</span><span class="badge-value badge-macos">14+</span></span>
-        <span class="badge"><span class="badge-label">license</span><span class="badge-value badge-license">MIT</span></span>
-      </div>
-      <figure class="shot hero-shot">
-        <div class="window crop crop-overview">
-          <img src="images/screenshots/cursor.png?v=2026-11-19" alt="Subscriptions — Cursor quota bars and reset countdowns" width="796" height="2832">
+      <div class="hero-copy">
+        <div class="icon-orbit">
+          <svg class="orbit-svg" viewBox="0 0 140 140" aria-hidden="true">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9cf8ff" />
+                <stop offset="55%" stop-color="#28d7ff" />
+                <stop offset="100%" stop-color="#5e5ce6" stop-opacity="0.2" />
+              </linearGradient>
+            </defs>
+            <circle class="orbit-track" cx="70" cy="70" r="64" />
+            <circle class="orbit-arc" cx="70" cy="70" r="64" stroke="url(#ringGrad)" />
+          </svg>
+          <img class="hero-icon" src="images/app-icon.png" alt="" width="96" height="96">
         </div>
-      </figure>
+
+        <h1>BurndownBar</h1>
+        <p class="catchline">May you not Burndown your AI tokens</p>
+        <p class="lede">Your AI quotas, in the menu bar. Track subscriptions, token usage, cache reads, and inference spend in one native macOS app.</p>
+
+        <div class="badges" aria-label="App details">
+          <span class="spec-pill">
+            <span class="spec-dot spec-dot-beta" aria-hidden="true"></span>
+            <span class="spec-key">beta</span>
+            <span class="spec-val">0.0.1</span>
+          </span>
+          <span class="spec-pill">
+            <span class="spec-dot spec-dot-macos" aria-hidden="true"></span>
+            <span class="spec-key">macOS</span>
+            <span class="spec-val">14+</span>
+          </span>
+          <span class="spec-pill">
+            <span class="spec-dot spec-dot-license" aria-hidden="true"></span>
+            <span class="spec-key">license</span>
+            <span class="spec-val">MIT</span>
+          </span>
+        </div>
+
+        <div class="hero-telemetry" aria-hidden="true">
+          <div class="telemetry-bar-head">
+            <span>Token runway</span>
+            <span class="mono">93% left · 13d 7h</span>
+          </div>
+          <div class="telemetry-track">
+            <div class="telemetry-fill"></div>
+            <div class="telemetry-marker" title="Pace marker"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-stage">
+        <div class="popover-anchor" aria-hidden="true">
+          <span class="anchor-chrome">
+            <img src="images/app-icon.png" alt="" width="14" height="14">
+            <span class="mono">93%</span>
+          </span>
+          <span class="anchor-caret"></span>
+        </div>
+
+        <figure class="shot hero-shot" data-tilt>
+          <div class="window window-hero crop crop-overview" data-lightbox="images/screenshots/cursor.png?v=2026-11-19" data-caption="Subscriptions — Cursor quota bars and reset countdowns" tabindex="0" role="button" aria-label="Inspect full Subscriptions screenshot">
+            <img src="images/screenshots/cursor.png?v=2026-11-19" alt="Subscriptions — Cursor quota bars and reset countdowns" width="796" height="2832">
+            <span class="zoom-hint" aria-hidden="true">Inspect full view</span>
+          </div>
+        </figure>
+
+        <div class="hero-chips" aria-hidden="true">
+          <div class="float-chip">
+            <span class="chip-dot green"></span>
+            <span>49% in reserve · Lasts until reset</span>
+          </div>
+          <div class="float-chip">
+            <span class="chip-dot cyan"></span>
+            <span class="mono">12.0M tokens today</span>
+          </div>
+        </div>
+      </div>
     </header>
 
+    <!-- Provider Constellation Dock -->
     <section class="providers reveal" aria-label="Supported providers">
-      <p class="eyebrow">Works with</p>
-      <ul>
-        <li><span class="logo" style="--icon: url(images/providers/openrouter.png)"></span>OpenRouter</li>
-        <li><span class="logo" style="--icon: url(images/providers/codex.png)"></span>Codex</li>
-        <li><span class="logo" style="--icon: url(images/providers/cursor.png)"></span>Cursor</li>
-        <li><span class="logo" style="--icon: url(images/providers/factory.png)"></span>Droid</li>
-        <li><span class="logo" style="--icon: url(images/providers/opencode.png)"></span>OpenCode</li>
-        <li><span class="logo" style="--icon: url(images/providers/antigravity.png)"></span>Antigravity</li>
-        <li><span class="logo" style="--icon: url(images/providers/copilot.png)"></span>Copilot</li>
-        <li><span class="logo" style="--icon: url(images/providers/warp.png)"></span>Warp</li>
-        <li><span class="logo" style="--icon: url(images/providers/zed.png)"></span>Zed</li>
-        <li><span class="logo" style="--icon: url(images/providers/claude.png)"></span>Claude</li>
-        <li><span class="logo" style="--icon: url(images/providers/grok.png)"></span>Grok</li>
+      <div class="providers-head">
+        <p class="eyebrow"><span class="idx">00</span> Works with</p>
+        <span class="providers-count mono">11 providers</span>
+      </div>
+      <ul class="provider-dock" data-spotlight>
+        <li><span class="logo" style="--icon: url(images/providers/openrouter.png)"></span><span>OpenRouter</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/codex.png)"></span><span>Codex</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/cursor.png)"></span><span>Cursor</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/factory.png)"></span><span>Droid</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/opencode.png)"></span><span>OpenCode</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/antigravity.png)"></span><span>Antigravity</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/copilot.png)"></span><span>Copilot</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/warp.png)"></span><span>Warp</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/zed.png)"></span><span>Zed</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/claude.png)"></span><span>Claude</span></li>
+        <li><span class="logo" style="--icon: url(images/providers/grok.png)"></span><span>Grok</span></li>
       </ul>
     </section>
 
-    <section class="feature reveal" id="inference">
-      <div class="copy">
-        <p class="eyebrow">Inference</p>
-        <h2>Spend you can see.<br>Limits you can set.</h2>
-        <p>Connect OpenRouter with a Management key to see account credits, runway, and per-key spend next to your subscriptions.</p>
-        <p>Set a USD cap, pause or resume a key, and check Zero Data Retention guardrails without opening a browser.</p>
-      </div>
-      <figure class="shot">
-        <div class="window crop crop-inference">
-          <img src="images/screenshots/openrouter.png?v=2026-11-19" alt="OpenRouter — Credits and key quotas" width="796" height="3478">
+    <!-- 01 · Inference -->
+    <section class="chapter chapter-inference reveal" id="inference">
+      <div class="bento-shell" data-spotlight>
+        <div class="copy">
+          <p class="eyebrow"><span class="idx">01</span> Inference</p>
+          <h2>Spend you can see.<br>Limits you can set.</h2>
+          <p>Connect OpenRouter with a Management key to see account credits, runway, and per-key spend next to your subscriptions.</p>
+          <p>Set a USD cap, pause or resume a key, and check Zero Data Retention guardrails without opening a browser.</p>
+
+          <!-- Interactive Guardrail & Cap Preview Toy -->
+          <div class="micro-console" aria-label="Interactive OpenRouter key control preview">
+            <div class="console-row">
+              <div class="console-key">
+                <span class="status-led" id="key-led"></span>
+                <span class="mono">cursor-agent</span>
+              </div>
+              <button type="button" class="console-btn" id="toggle-key-btn" aria-pressed="false">Pause key</button>
+            </div>
+            <div class="console-slider-wrap">
+              <div class="console-slider-meta">
+                <label for="cap-slider">USD cap</label>
+                <span class="mono" id="cap-readout">$21.60 / $50.00</span>
+              </div>
+              <input type="range" id="cap-slider" min="25" max="150" step="5" value="50" aria-label="Simulated USD cap">
+            </div>
+            <div class="console-row console-zdr">
+              <span>Zero Data Retention (ZDR)</span>
+              <span class="zdr-badge mono">Enabled</span>
+            </div>
+          </div>
         </div>
-      </figure>
+
+        <figure class="shot">
+          <div class="window crop crop-inference" data-lightbox="images/screenshots/openrouter.png?v=2026-11-19" data-caption="OpenRouter — Credits and key quotas" tabindex="0" role="button" aria-label="Inspect full OpenRouter screenshot">
+            <img src="images/screenshots/openrouter.png?v=2026-11-19" alt="OpenRouter — Credits and key quotas" width="796" height="3478">
+            <span class="zoom-hint" aria-hidden="true">Inspect full view</span>
+          </div>
+        </figure>
+      </div>
     </section>
 
-    <section class="feature reverse reveal" id="rankings">
+    <!-- 02 · Rankings -->
+    <section class="chapter chapter-rankings reveal" id="rankings">
+      <div class="rankings-stage">
+        <div class="radar-rings" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <figure class="shot">
+          <div class="window" data-lightbox="images/screenshots/rankings.png?v=2026-11-19" data-caption="Rankings — OpenRouter and Artificial Analysis sources" tabindex="0" role="button" aria-label="Inspect full Rankings screenshot">
+            <img src="images/screenshots/rankings.png?v=2026-11-19" alt="Rankings — OpenRouter and Artificial Analysis sources" width="796" height="978">
+            <span class="zoom-hint" aria-hidden="true">Inspect full view</span>
+          </div>
+        </figure>
+      </div>
+
       <div class="copy">
-        <p class="eyebrow">Rankings</p>
+        <p class="eyebrow"><span class="idx">02</span> Rankings</p>
         <h2>Which models<br>developers actually use.</h2>
         <p>OpenRouter rankings show top models and apps by tokens processed, today, this week, or this month.</p>
         <p>Artificial Analysis compares the top 12 models by Intelligence Index, time per task, and cost per task.</p>
-      </div>
-      <figure class="shot">
-        <div class="window">
-          <img src="images/screenshots/rankings.png?v=2026-11-19" alt="Rankings — OpenRouter and Artificial Analysis sources" width="796" height="978">
+
+        <div class="source-cards" aria-hidden="true">
+          <div class="source-card">
+            <span class="source-tag mono">OpenRouter</span>
+            <p>Top models &amp; apps by tokens processed across day, week, or month.</p>
+          </div>
+          <div class="source-card">
+            <span class="source-tag mono">Artificial Analysis</span>
+            <p>Top 12 models compared on Intelligence Index, speed, and cost.</p>
+          </div>
         </div>
-      </figure>
+      </div>
     </section>
 
-    <section class="feature reveal" id="advisor">
-      <div class="copy">
-        <p class="eyebrow">Model Advisor</p>
-        <h2>A recommendation<br>for the task.</h2>
-        <p>Pick a decision model (Jev, OpenAI Decisions API etc. ) and a task, then get advice.</p>
-        <p>The recommendation weighs pricing, cheapness, intelligence, and your token usage. It uses your OpenRouter Standard API key, and the result is advisory.</p>
+    <!-- 03 · Model Advisor (Interactive 3-Step Flow) -->
+    <section class="chapter chapter-advisor reveal" id="advisor">
+      <div class="advisor-header">
+        <div class="copy">
+          <p class="eyebrow"><span class="idx">03</span> Model Advisor</p>
+          <h2>A recommendation<br>for the task.</h2>
+          <p>Pick a decision model (Jev, OpenAI Decisions API etc. ) and a task, then get advice.</p>
+          <p>The recommendation weighs pricing, cheapness, intelligence, and your token usage. It uses your OpenRouter Standard API key, and the result is advisory.</p>
+        </div>
       </div>
-      <figure class="shot shot-stack">
-        <div class="window">
-          <img src="images/screenshots/model-advisor-settings.png?v=2026-11-19" alt="Model Advisor settings — Jev 1.14 and factor weights" width="750" height="822">
+
+      <!-- View A: Interactive 3-Step Pipeline -->
+      <div class="advisor-flow" id="advisor-flow" data-active-step="1" data-spotlight>
+        <!-- Stepper Progress Header -->
+        <ol class="flow-stepper" aria-label="Model Advisor steps">
+          <li class="stepper-item is-active" data-step-trigger="1">
+            <button type="button" class="stepper-btn">
+              <span class="stepper-num mono">01</span>
+              <span class="stepper-text">Pick a task</span>
+            </button>
+          </li>
+          <li class="stepper-line" aria-hidden="true"></li>
+          <li class="stepper-item" data-step-trigger="2">
+            <button type="button" class="stepper-btn">
+              <span class="stepper-num mono">02</span>
+              <span class="stepper-text">Configure weights</span>
+            </button>
+          </li>
+          <li class="stepper-line" aria-hidden="true"></li>
+          <li class="stepper-item" data-step-trigger="3">
+            <button type="button" class="stepper-btn">
+              <span class="stepper-num mono">03</span>
+              <span class="stepper-text">Get recommendation</span>
+            </button>
+          </li>
+        </ol>
+
+        <!-- 3-Column Connected Flow Grid -->
+        <div class="flow-grid">
+          <!-- STEP 1: Pick a task -->
+          <div class="flow-card is-active" data-flow-step="1">
+            <div class="flow-card-head">
+              <span class="flow-step-tag mono">Step 01</span>
+              <h3>Pick a task</h3>
+            </div>
+
+            <div class="flow-field">
+              <label class="flow-label" for="advisor-category">Category</label>
+              <div class="pill-group" id="advisor-category" role="group" aria-label="Task category">
+                <button type="button" class="choice-pill is-active" data-cat="coding">Coding</button>
+                <button type="button" class="choice-pill" data-cat="reasoning">Reasoning</button>
+                <button type="button" class="choice-pill" data-cat="writing">Writing</button>
+                <button type="button" class="choice-pill" data-cat="triage">Fast triage</button>
+              </div>
+            </div>
+
+            <div class="flow-field">
+              <label class="flow-label" for="advisor-task">Task</label>
+              <select class="flow-select" id="advisor-task">
+                <option value="debug" selected>Debug and fix bugs</option>
+                <option value="refactor">Refactor architecture</option>
+                <option value="tests">Write unit tests</option>
+              </select>
+            </div>
+
+            <div class="flow-field">
+              <label class="flow-label" for="advisor-model">Decision model</label>
+              <select class="flow-select" id="advisor-model">
+                <option value="jev" selected>Jev 1.14 (typesafe/jev-1.14)</option>
+                <option value="openai">OpenAI Decisions API</option>
+              </select>
+            </div>
+
+            <div class="flow-card-foot">
+              <button type="button" class="flow-next-btn" data-goto-step="2">
+                <span>Configure weights</span>
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 36 24" width="36" height="24">
+              <path class="connector-path" d="M 2 12 H 30" />
+              <path class="connector-arrow" d="M 24 6 L 31 12 L 24 18" />
+            </svg>
+          </div>
+
+          <!-- STEP 2: Configure weights -->
+          <div class="flow-card" data-flow-step="2">
+            <div class="flow-card-head">
+              <span class="flow-step-tag mono">Step 02</span>
+              <h3>Configure weights</h3>
+              <button type="button" class="flow-reset-btn" id="weights-reset">Reset</button>
+            </div>
+
+            <div class="weight-presets" aria-label="Weight presets">
+              <button type="button" class="preset-chip is-active" data-preset="default">Balanced</button>
+              <button type="button" class="preset-chip" data-preset="smart">Max intelligence</button>
+              <button type="button" class="preset-chip" data-preset="frugal">Save tokens</button>
+            </div>
+
+            <div class="weight-list">
+              <div class="weight-row">
+                <div class="weight-meta">
+                  <label for="w-pricing">Pricing</label>
+                  <span class="mono" id="w-pricing-val">35%</span>
+                </div>
+                <input type="range" id="w-pricing" min="0" max="100" step="5" value="35">
+              </div>
+
+              <div class="weight-row">
+                <div class="weight-meta">
+                  <label for="w-cheapness">Cheapness</label>
+                  <span class="mono" id="w-cheapness-val">0%</span>
+                </div>
+                <input type="range" id="w-cheapness" min="0" max="100" step="5" value="0">
+              </div>
+
+              <div class="weight-row">
+                <div class="weight-meta">
+                  <label for="w-intelligence">Intelligence</label>
+                  <span class="mono" id="w-intelligence-val">65%</span>
+                </div>
+                <input type="range" id="w-intelligence" min="0" max="100" step="5" value="65">
+              </div>
+
+              <div class="weight-row">
+                <div class="weight-meta">
+                  <label for="w-usage">Token usage</label>
+                  <span class="mono" id="w-usage-val">0%</span>
+                </div>
+                <input type="range" id="w-usage" min="0" max="100" step="5" value="0">
+              </div>
+            </div>
+
+            <div class="flow-card-foot">
+              <button type="button" class="flow-next-btn flow-cta" id="run-advisor-btn" data-goto-step="3">
+                <span>Get recommendation</span>
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 36 24" width="36" height="24">
+              <path class="connector-path" d="M 2 12 H 30" />
+              <path class="connector-arrow" d="M 24 6 L 31 12 L 24 18" />
+            </svg>
+          </div>
+
+          <!-- STEP 3: Get recommendation -->
+          <div class="flow-card flow-card-result" data-flow-step="3" aria-live="polite">
+            <div class="flow-card-head">
+              <span class="flow-step-tag mono">Step 03</span>
+              <h3>Recommendation</h3>
+              <span class="rec-tier-badge" id="rec-tier">Frontier</span>
+            </div>
+
+            <div class="rec-hero">
+              <div class="rec-model-wrap">
+                <p class="rec-kicker">Recommended LLM</p>
+                <p class="rec-model" id="rec-model">Claude Fable 5.2</p>
+                <p class="rec-slug mono" id="rec-slug">anthropic/claude-fable-5.2</p>
+              </div>
+              <span class="rec-conf mono" id="rec-conf">46% conf</span>
+            </div>
+
+            <div class="rec-metrics">
+              <div>
+                <span class="rec-metric-label">Pricing</span>
+                <span class="rec-metric-val mono" id="rec-price">$8.00 / $40.00</span>
+              </div>
+              <div>
+                <span class="rec-metric-label">Cheapness</span>
+                <span class="rec-metric-val mono" id="rec-cheap">15/100</span>
+              </div>
+              <div>
+                <span class="rec-metric-label">Intelligence</span>
+                <span class="rec-metric-val mono" id="rec-intel">65</span>
+              </div>
+            </div>
+
+            <div class="rec-efficiency">
+              <div class="rec-eff-head">
+                <span>Spend efficiency</span>
+                <span class="mono" id="rec-eff-score">3/4</span>
+              </div>
+              <p class="rec-eff-note" id="rec-eff-note">Well balanced cost vs intelligence</p>
+              <div class="eff-segments" id="rec-eff-bars" aria-hidden="true">
+                <span class="is-filled"></span>
+                <span class="is-filled"></span>
+                <span class="is-filled"></span>
+                <span></span>
+              </div>
+            </div>
+
+            <div class="rec-candidates">
+              <p class="rec-cand-title">Candidate LLM probabilities</p>
+              <ul class="cand-list" id="rec-cand-list">
+                <li>
+                  <div class="cand-meta"><span>Claude Fable 5.2</span><span class="mono">46%</span></div>
+                  <div class="cand-track"><div class="cand-fill" style="width: 46%"></div></div>
+                </li>
+                <li>
+                  <div class="cand-meta"><span>GPT-6.2 Astra</span><span class="mono">27%</span></div>
+                  <div class="cand-track"><div class="cand-fill" style="width: 27%"></div></div>
+                </li>
+                <li>
+                  <div class="cand-meta"><span>Gemini 4 Neon</span><span class="mono">21%</span></div>
+                  <div class="cand-track"><div class="cand-fill" style="width: 21%"></div></div>
+                </li>
+                <li>
+                  <div class="cand-meta"><span>Gemini 4 Carbon</span><span class="mono">6%</span></div>
+                  <div class="cand-track"><div class="cand-fill" style="width: 6%"></div></div>
+                </li>
+              </ul>
+            </div>
+
+            <p class="rec-footnote mono" id="rec-footnote">Advisory · Jev 1.14 · Coding / Debug and fix bugs</p>
+          </div>
         </div>
-        <div class="window">
-          <img src="images/screenshots/model-advisor-result.png?v=2026-11-19" alt="Model Advisor recommendation for a coding task" width="750" height="966">
-        </div>
-      </figure>
+      </div>
     </section>
 
-    <section class="feature reverse reveal" id="sources">
-      <div class="copy">
-        <p class="eyebrow">Connections</p>
-        <h2>CLIProxyAPI or direct.<br>Your choice.</h2>
-        <p>Read Codex, Grok, and Claude through the accounts already signed in to CLIProxyAPI, or connect each one directly. Switch them together or one at a time under Quota source.</p>
-        <p>Every other provider connects on its own. Credentials you save stay in the macOS Keychain.</p>
-      </div>
-      <figure class="shot">
-        <div class="window crop crop-sources">
-          <img src="images/screenshots/preferences.png?v=2026-11-19" alt="Preferences — Quota source set per provider" width="796" height="2312">
+    <!-- 04 · Connections (Multi-account → CLIProxyAPI → Subscription) -->
+    <section class="chapter chapter-sources reveal" id="sources">
+      <div class="advisor-header">
+        <div class="copy">
+          <p class="eyebrow"><span class="idx">04</span> Connections</p>
+          <h2>CLIProxyAPI or direct.<br>Your choice.</h2>
+          <p>Read Codex, Grok, and Claude through the accounts already signed in to CLIProxyAPI, or connect each one directly. Switch them together or one at a time under Quota source.</p>
+          <p>Every other provider connects on its own. Credentials you save stay in the macOS Keychain.</p>
         </div>
-      </figure>
+
+        <div class="advisor-controls" role="tablist" aria-label="Connections view">
+          <button type="button" class="deck-tab is-active" data-sources-view="flow" role="tab" aria-selected="true">Connection flow</button>
+          <button type="button" class="deck-tab" data-sources-view="screenshot" role="tab" aria-selected="false">Preferences</button>
+        </div>
+      </div>
+
+      <!-- View A: 3-Column Multi-account -> CLIProxyAPI -> Subscription Showcase -->
+      <div class="sources-flow" id="sources-flow" data-spotlight>
+        <div class="sources-grid">
+          <!-- LEFT: Multi-account -->
+          <div class="flow-card source-col">
+            <div class="flow-card-head">
+              <span class="flow-step-tag mono">Multi-account</span>
+              <h3>Signed-in accounts</h3>
+            </div>
+
+            <div class="acct-groups">
+              <div class="acct-group" data-acct-provider="codex">
+                <div class="acct-group-head">
+                  <span class="acct-provider">
+                    <span class="logo" style="--icon: url(images/providers/codex.png)"></span>
+                    <span>Codex</span>
+                  </span>
+                  <span class="acct-count mono">2 accounts</span>
+                </div>
+                <div class="acct-list">
+                  <span class="acct-pill"><span class="acct-dot"></span>work@team.dev</span>
+                  <span class="acct-pill"><span class="acct-dot"></span>personal@me.dev</span>
+                </div>
+              </div>
+
+              <div class="acct-group" data-acct-provider="claude">
+                <div class="acct-group-head">
+                  <span class="acct-provider">
+                    <span class="logo" style="--icon: url(images/providers/claude.png)"></span>
+                    <span>Claude</span>
+                  </span>
+                  <span class="acct-count mono">2 accounts</span>
+                </div>
+                <div class="acct-list">
+                  <span class="acct-pill"><span class="acct-dot"></span>pro@team.dev</span>
+                  <span class="acct-pill"><span class="acct-dot"></span>max@me.dev</span>
+                </div>
+              </div>
+
+              <div class="acct-group" data-acct-provider="grok">
+                <div class="acct-group-head">
+                  <span class="acct-provider">
+                    <span class="logo" style="--icon: url(images/providers/grok.png)"></span>
+                    <span>Grok</span>
+                  </span>
+                  <span class="acct-count mono">1 account</span>
+                </div>
+                <div class="acct-list">
+                  <span class="acct-pill"><span class="acct-dot"></span>main@me.dev</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="rec-footnote mono">5 signed-in accounts · Ready to read</p>
+          </div>
+
+          <div class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 36 24" width="36" height="24">
+              <path class="connector-path" d="M 2 12 H 30" />
+              <path class="connector-arrow" d="M 24 6 L 31 12 L 24 18" />
+            </svg>
+          </div>
+
+          <!-- MIDDLE: CLIProxyAPI Hub -->
+          <div class="flow-card source-col source-hub is-active">
+            <div class="flow-card-head">
+              <span class="flow-step-tag mono">Quota source</span>
+              <h3>CLIProxyAPI</h3>
+            </div>
+
+            <div class="hub-master">
+              <span class="flow-label">Switch all together</span>
+              <div class="route-toggle" role="group" aria-label="Switch all providers quota source">
+                <button type="button" class="route-btn is-active" data-master-route="proxy">CLIProxyAPI</button>
+                <button type="button" class="route-btn" data-master-route="direct">Direct</button>
+              </div>
+            </div>
+
+            <div class="hub-rows" aria-label="Per-provider quota source">
+              <div class="hub-row" data-provider-row="codex">
+                <span class="acct-provider">
+                  <span class="logo" style="--icon: url(images/providers/codex.png)"></span>
+                  <span>Codex</span>
+                </span>
+                <div class="route-toggle route-toggle-sm" role="group" aria-label="Codex quota source">
+                  <button type="button" class="route-btn is-active" data-provider="codex" data-mode="proxy">CLIProxyAPI</button>
+                  <button type="button" class="route-btn" data-provider="codex" data-mode="direct">Direct</button>
+                </div>
+              </div>
+
+              <div class="hub-row" data-provider-row="grok">
+                <span class="acct-provider">
+                  <span class="logo" style="--icon: url(images/providers/grok.png)"></span>
+                  <span>Grok</span>
+                </span>
+                <div class="route-toggle route-toggle-sm" role="group" aria-label="Grok quota source">
+                  <button type="button" class="route-btn is-active" data-provider="grok" data-mode="proxy">CLIProxyAPI</button>
+                  <button type="button" class="route-btn" data-provider="grok" data-mode="direct">Direct</button>
+                </div>
+              </div>
+
+              <div class="hub-row" data-provider-row="claude">
+                <span class="acct-provider">
+                  <span class="logo" style="--icon: url(images/providers/claude.png)"></span>
+                  <span>Claude</span>
+                </span>
+                <div class="route-toggle route-toggle-sm" role="group" aria-label="Claude quota source">
+                  <button type="button" class="route-btn is-active" data-provider="claude" data-mode="proxy">CLIProxyAPI</button>
+                  <button type="button" class="route-btn" data-provider="claude" data-mode="direct">Direct</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="keychain-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Saved credentials stay in the macOS Keychain</span>
+            </div>
+          </div>
+
+          <div class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 36 24" width="36" height="24">
+              <path class="connector-path" d="M 2 12 H 30" />
+              <path class="connector-arrow" d="M 24 6 L 31 12 L 24 18" />
+            </svg>
+          </div>
+
+          <!-- RIGHT: Subscription -->
+          <div class="flow-card source-col source-subs" aria-live="polite">
+            <div class="flow-card-head">
+              <span class="flow-step-tag mono">Subscription</span>
+              <h3>Menu-bar quotas</h3>
+            </div>
+
+            <div class="sub-list">
+              <div class="sub-item" data-sub-item="codex">
+                <div class="sub-head">
+                  <span class="acct-provider">
+                    <span class="logo" style="--icon: url(images/providers/codex.png)"></span>
+                    <span>Codex</span>
+                  </span>
+                  <span class="sub-pct mono">88% left</span>
+                </div>
+                <div class="sub-bar">
+                  <div class="sub-fill" style="width: 88%"></div>
+                  <div class="sub-pace" style="left: 48%"></div>
+                </div>
+                <div class="sub-meta">
+                  <span class="sub-source-badge mono" data-sub-badge="codex">CLIProxyAPI · 2 accounts</span>
+                  <span class="mono">Resets 4d 11h</span>
+                </div>
+              </div>
+
+              <div class="sub-item" data-sub-item="claude">
+                <div class="sub-head">
+                  <span class="acct-provider">
+                    <span class="logo" style="--icon: url(images/providers/claude.png)"></span>
+                    <span>Claude</span>
+                  </span>
+                  <span class="sub-pct mono">74% left</span>
+                </div>
+                <div class="sub-bar">
+                  <div class="sub-fill" style="width: 74%"></div>
+                  <div class="sub-pace" style="left: 52%"></div>
+                </div>
+                <div class="sub-meta">
+                  <span class="sub-source-badge mono" data-sub-badge="claude">CLIProxyAPI · 2 accounts</span>
+                  <span class="mono">Resets 2d 6h</span>
+                </div>
+              </div>
+
+              <div class="sub-item" data-sub-item="grok">
+                <div class="sub-head">
+                  <span class="acct-provider">
+                    <span class="logo" style="--icon: url(images/providers/grok.png)"></span>
+                    <span>Grok</span>
+                  </span>
+                  <span class="sub-pct mono">62% left</span>
+                </div>
+                <div class="sub-bar">
+                  <div class="sub-fill" style="width: 62%"></div>
+                  <div class="sub-pace" style="left: 41%"></div>
+                </div>
+                <div class="sub-meta">
+                  <span class="sub-source-badge mono" data-sub-badge="grok">CLIProxyAPI · 1 account</span>
+                  <span class="mono">Resets 3d 3h</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="rec-footnote mono">BurndownBar · Unified subscription telemetry</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- View B: Native Preferences Screenshot -->
+      <div class="sources-screenshot-stage" id="sources-screenshot" data-spotlight hidden>
+        <figure class="shot">
+          <div class="window crop crop-sources" data-lightbox="images/screenshots/preferences.png?v=2026-11-19" data-caption="Preferences — Quota source set per provider" tabindex="0" role="button" aria-label="Inspect full Preferences screenshot">
+            <img src="images/screenshots/preferences.png?v=2026-11-19" alt="Preferences — Quota source set per provider" width="796" height="2312">
+            <span class="zoom-hint" aria-hidden="true">Inspect full view</span>
+          </div>
+        </figure>
+      </div>
     </section>
   </main>
 
   <footer class="reveal">
-    <p><a href="https://github.com/patel-of-thought/burndown-bar/blob/main/docs/PRIVACY.md">Privacy and credentials</a></p>
-    <p>Provider marks are sourced from their <a href="https://github.com/patel-of-thought/burndown-bar/blob/main/Assets/Providers/sources.json">official sites or projects</a>. The BurndownBar app icon is original artwork. Provider trademarks belong to their owners; no endorsement is implied.</p>
-    <p>Rankings data from <a href="https://openrouter.ai/rankings">OpenRouter</a> under CC BY 4.0 and from Artificial Analysis.</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="images/app-icon.png" alt="" width="24" height="24">
+        <span>BurndownBar</span>
+      </div>
+      <div class="footer-copy">
+        <p><a href="https://github.com/patel-of-thought/burndown-bar/blob/main/docs/PRIVACY.md">Privacy and credentials</a></p>
+        <p>Provider marks are sourced from their <a href="https://github.com/patel-of-thought/burndown-bar/blob/main/Assets/Providers/sources.json">official sites or projects</a>. The BurndownBar app icon is original artwork. Provider trademarks belong to their owners; no endorsement is implied.</p>
+        <p>Rankings data from <a href="https://openrouter.ai/rankings">OpenRouter</a> under CC BY 4.0 and from Artificial Analysis.</p>
+      </div>
+    </div>
   </footer>
+
+  <!-- Screenshot Lightbox -->
+  <dialog class="lightbox" id="lightbox" aria-label="Screenshot preview">
+    <div class="lightbox-frame">
+      <div class="lightbox-bar">
+        <span class="lightbox-caption mono" id="lightbox-caption"></span>
+        <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close preview">&times;</button>
+      </div>
+      <div class="lightbox-scroll">
+        <img id="lightbox-img" src="" alt="">
+      </div>
+    </div>
+  </dialog>
 </body>
 </html>
